@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Category test</title>
+    <url>/2021/09/15/Cat_test/</url>
+    <content><![CDATA[<h1 id="Test-how-to-post-hexo"><a href="#Test-how-to-post-hexo" class="headerlink" title="Test how to post hexo"></a>Test how to post hexo</h1><p>posting my blog</p>
+<script type="math/tex; mode=display">\begin{equation}\label{eq1}
+e = mc^2
+\end(equation)</script>]]></content>
+      <categories>
+        <category>Hexoo</category>
+        <category>sub1</category>
+      </categories>
+      <tags>
+        <tag>testing</tag>
+        <tag>tags</tag>
+        <tag>NexT</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Practice Posting</title>
+    <url>/2021/08/26/Practice-Posting/</url>
+    <content><![CDATA[<h1 id="First-Post"><a href="#First-Post" class="headerlink" title="First Post"></a>First Post</h1><h2 id="Writing-Markdown-with-Git-Bash-is-too-hard"><a href="#Writing-Markdown-with-Git-Bash-is-too-hard" class="headerlink" title="Writing Markdown with Git Bash is too hard."></a>Writing Markdown with Git Bash is too hard.</h2><ul>
+<li>Want to write Markdown in Jupyter Notebook</li>
+<li>주피터 노트북은 바로바로 결과를 볼 수 있어서 쓰기 편한데</li>
+<li>Git Bast에 바로 쓰는건 이게 코드만 보고 잘 적용이 됐는지 안보여서 불편함</li>
+<li><script type="math/tex; mode=display">x+1 = 2</script></li>
+<li><script type="math/tex; mode=display">
+  \sqrt{3x-1}+(1+x)^2</script></li>
+<li><p>$ x+1 = 2y $</p>
+</li>
+</ul>
+<p>  $x+1=2y$</p>
+<script type="math/tex; mode=display">( a^2 )</script><p>이런게 잘 들어가는지<br>Hexo를 통해 문서를 작성하고 나면 <code>hexo clean &amp;&amp; generate</code>를 해준 다음<br><code>hexo deploy</code>로 서버?에 배포?해준다.</p>
+<h2 id="ㅜㅜ"><a href="#ㅜㅜ" class="headerlink" title="ㅜㅜ"></a>ㅜㅜ</h2><ul>
+<li>주피터노트북 상에서 작업하고 거기서 연동해서 바로 블로그에 올릴수는 없을까.</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
+    <title>SQL 첫번째</title>
+    <url>/2021/08/14/SQL/</url>
+    <content><![CDATA[<h1 id="SQL-1"><a href="#SQL-1" class="headerlink" title="SQL-1"></a>SQL-1</h1><h3 id="DB-Database"><a href="#DB-Database" class="headerlink" title="DB : Database"></a>DB : Database</h3><p>데이터를 통합하여 관리하는 데이터의 집합</p>
+<h3 id="DBMS-Database-Management-System"><a href="#DBMS-Database-Management-System" class="headerlink" title="DBMS(Database Management System)"></a>DBMS(Database Management System)</h3><p>데이터 베이스를 관리하는 시스템</p>
+<h3 id="RDBMS-Relational-Database-Management-System"><a href="#RDBMS-Relational-Database-Management-System" class="headerlink" title="RDBMS : Relational Database Management System"></a>RDBMS : Relational Database Management System</h3><p>Oracle, Mysql, Postgresql, Sqlite</p>
+<p>데이터의 테이블 사이에 키값으로 관계를 가지고 있는 데이터베이스</p>
+<h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><p>Mongodb, Hbase, Cassandra</p>
+<p>데이터 테이블 사이의 관계가 없이 데이터를 저장하는 DB.</p>
+<p>데이터 사이의 관계가 없으므로 복잡성이 적고 많은 데이터의 저장이 가능.</p>
+<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><h3 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h3><p>MySQL은 오픈소스이며, 다중사용자와 다중 스레드 지원.</p>
+<p>다양한 운영체제에 다양한 프로그래밍 언어 지원.</p>
+<p>표준 SQL을 사용.</p>
+<p>작고 강력하며 가격이 저렴.</p>
+<p>AWS 우분투 연결</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh -i ~Downloads/ssac.pem ubuntu@ip</span><br></pre></td></tr></table></figure>
+<p>인스턴스 생성 시 받았던 비밀키랑, 퍼블릭 IP 사용</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get update -y</span><br><span class="line">sudo apt-get upgrade -y</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt-get install -y mysql-server mysql-client</span><br><span class="line">sudo mysql</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span>,authentication_string,plugin,host <span class="keyword">FROM</span> mysql.user;</span><br><span class="line">##비밀번호를 pwd로 변경(내부 패스워드 로컬)</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;pwd&#x27;</span>;</span><br><span class="line"></span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">user</span>,authentication_string,plugin,host <span class="keyword">FROM</span> mysql.user;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment">#ubuntu에서 이렇게 하고 패스워드 쳐서 mysql 접속</span></span><br><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line"><span class="comment">#두번째 패스워드 생성//외부접속 패스워드, 인터넷으로 접속 할 때</span></span><br><span class="line">sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf</span><br><span class="line"></span><br><span class="line"><span class="comment">#vim에서 /bind로 bind 검색 가능, shift-d 하면 </span></span><br><span class="line">커서 뒤 다 삭제</span><br><span class="line">여기서 bind-adress를 127.0.0.1을 0.0.0.0으로 변경</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">#외부접속 패스워드 생성</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> root@<span class="string">&#x27;%&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;pwd&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl restart mysql</span><br></pre></td></tr></table></figure>
+<p>(PC)work bench(wb) → Internet → MySQL(server)</p>
+<p>필요한 것</p>
+<p>public ip, password</p>
+<p>MySQL Workvench에서 MySQL Connection 옆에 + 버튼 누르고</p>
+<p>Setup 에서 Connection Name 작성(SSAC)</p>
+<p>Hostname(public IP), username 입력, PW는 아까 햇던 ssac</p>
+<p>이때 username은 ubuntu가 아니라 root. mySQL 서버에 접속하는거이기 때문.</p>
+<p>FIle → OPen SQL script 해서 데이터 불러오고</p>
+<p>File → new model</p>
+<p>주석</p>
+<p>/<em> ㅇㅇㅇㅇ </em></p>
+<p>— 한줄</p>
+<p>`# &lt;- 얘도 workbench에서 지원해줌</p>
+<p>heidiSQL → 가벼움(윈도우</p>
+<p>Seuqelpro → 맥에서 가볍게 쓸때</p>
+]]></content>
+      <categories>
+        <category>SQL</category>
+      </categories>
+      <tags>
+        <tag>data</tag>
+        <tag>sql</tag>
+        <tag>study</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>data</title>
+    <url>/2021/09/15/data/</url>
+    <content><![CDATA[<h1 id="Data11"><a href="#Data11" class="headerlink" title="Data11"></a>Data11</h1><h3 id="Heading33"><a href="#Heading33" class="headerlink" title="Heading33"></a>Heading33</h3>]]></content>
+      <tags>
+        <tag>tag1</tag>
+        <tag>tag2</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>post1</title>
+    <url>/2021/09/15/post/</url>
+    <content><![CDATA[<h1 id="Post-for-page-data"><a href="#Post-for-page-data" class="headerlink" title="Post for page data"></a>Post for page data</h1><h2 id="II"><a href="#II" class="headerlink" title="II"></a>II</h2>]]></content>
+      <categories>
+        <category>Hexoo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>dd</tag>
+      </tags>
+  </entry>
+</search>
