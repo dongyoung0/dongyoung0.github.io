@@ -1,23 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Category test</title>
-    <url>/2021/09/15/Cat_test/</url>
-    <content><![CDATA[<h1 id="Test-how-to-post-hexo"><a href="#Test-how-to-post-hexo" class="headerlink" title="Test how to post hexo"></a>Test how to post hexo</h1><p>posting my blog</p>
-<script type="math/tex; mode=display">\begin{equation}\label{eq1}
-e = mc^2
-\end(equation)</script>]]></content>
-      <categories>
-        <category>Hexoo</category>
-        <category>sub1</category>
-      </categories>
-      <tags>
-        <tag>testing</tag>
-        <tag>tags</tag>
-        <tag>NexT</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Practice Posting</title>
     <url>/2021/08/26/Practice-Posting/</url>
     <content><![CDATA[<h1 id="First-Post"><a href="#First-Post" class="headerlink" title="First Post"></a>First Post</h1><h2 id="Writing-Markdown-with-Git-Bash-is-too-hard"><a href="#Writing-Markdown-with-Git-Bash-is-too-hard" class="headerlink" title="Writing Markdown with Git Bash is too hard."></a>Writing Markdown with Git Bash is too hard.</h2><ul>
@@ -83,27 +66,6 @@ e = mc^2
         <tag>data</tag>
         <tag>sql</tag>
         <tag>study</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>data</title>
-    <url>/2021/09/15/data/</url>
-    <content><![CDATA[<h1 id="Data11"><a href="#Data11" class="headerlink" title="Data11"></a>Data11</h1><h3 id="Heading33"><a href="#Heading33" class="headerlink" title="Heading33"></a>Heading33</h3>]]></content>
-      <tags>
-        <tag>tag1</tag>
-        <tag>tag2</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>post1</title>
-    <url>/2021/09/15/post/</url>
-    <content><![CDATA[<h1 id="Post-for-page-data"><a href="#Post-for-page-data" class="headerlink" title="Post for page data"></a>Post for page data</h1><h2 id="II"><a href="#II" class="headerlink" title="II"></a>II</h2>]]></content>
-      <categories>
-        <category>Hexoo</category>
-      </categories>
-      <tags>
-        <tag>hexo</tag>
-        <tag>dd</tag>
       </tags>
   </entry>
 </search>
