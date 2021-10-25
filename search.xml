@@ -130,26 +130,6 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
       </tags>
   </entry>
   <entry>
-    <title>Practice Posting</title>
-    <url>/2021/08/26/Practice-Posting/</url>
-    <content><![CDATA[<h1 id="First-Post"><a href="#First-Post" class="headerlink" title="First Post"></a>First Post</h1><h2 id="Writing-Markdown-with-Git-Bash-is-too-hard"><a href="#Writing-Markdown-with-Git-Bash-is-too-hard" class="headerlink" title="Writing Markdown with Git Bash is too hard."></a>Writing Markdown with Git Bash is too hard.</h2><ul>
-<li>Want to write Markdown in Jupyter Notebook</li>
-<li>주피터 노트북은 바로바로 결과를 볼 수 있어서 쓰기 편한데</li>
-<li>Git Bast에 바로 쓰는건 이게 코드만 보고 잘 적용이 됐는지 안보여서 불편함</li>
-<li><script type="math/tex; mode=display">x+1 = 2</script></li>
-<li><script type="math/tex; mode=display">
-  \sqrt{3x-1}+(1+x)^2</script></li>
-<li><p>$ x+1 = 2y $</p>
-</li>
-</ul>
-<p>  $x+1=2y$</p>
-<script type="math/tex; mode=display">( a^2 )</script><p>이런게 잘 들어가는지<br>Hexo를 통해 문서를 작성하고 나면 <code>hexo clean &amp;&amp; generate</code>를 해준 다음<br><code>hexo deploy</code>로 서버?에 배포?해준다.</p>
-<h2 id="ㅜㅜ"><a href="#ㅜㅜ" class="headerlink" title="ㅜㅜ"></a>ㅜㅜ</h2><ul>
-<li>주피터노트북 상에서 작업하고 거기서 연동해서 바로 블로그에 올릴수는 없을까.</li>
-</ul>
-]]></content>
-  </entry>
-  <entry>
     <title>SQL-01</title>
     <url>/2021/08/30/SQL/</url>
     <content><![CDATA[<h1 id="SQL-1"><a href="#SQL-1" class="headerlink" title="SQL-1"></a>SQL-1</h1><h3 id="DB-Database"><a href="#DB-Database" class="headerlink" title="DB : Database"></a>DB : Database</h3><p>데이터를 통합하여 관리하는 데이터의 집합</p>
@@ -195,6 +175,26 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
         <tag>data</tag>
         <tag>sql</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Practice Posting</title>
+    <url>/2021/08/26/Practice-Posting/</url>
+    <content><![CDATA[<h1 id="First-Post"><a href="#First-Post" class="headerlink" title="First Post"></a>First Post</h1><h2 id="Writing-Markdown-with-Git-Bash-is-too-hard"><a href="#Writing-Markdown-with-Git-Bash-is-too-hard" class="headerlink" title="Writing Markdown with Git Bash is too hard."></a>Writing Markdown with Git Bash is too hard.</h2><ul>
+<li>Want to write Markdown in Jupyter Notebook</li>
+<li>주피터 노트북은 바로바로 결과를 볼 수 있어서 쓰기 편한데</li>
+<li>Git Bast에 바로 쓰는건 이게 코드만 보고 잘 적용이 됐는지 안보여서 불편함</li>
+<li><script type="math/tex; mode=display">x+1 = 2</script></li>
+<li><script type="math/tex; mode=display">
+  \sqrt{3x-1}+(1+x)^2</script></li>
+<li><p>$ x+1 = 2y $</p>
+</li>
+</ul>
+<p>  $x+1=2y$</p>
+<script type="math/tex; mode=display">( a^2 )</script><p>이런게 잘 들어가는지<br>Hexo를 통해 문서를 작성하고 나면 <code>hexo clean &amp;&amp; generate</code>를 해준 다음<br><code>hexo deploy</code>로 서버?에 배포?해준다.</p>
+<h2 id="ㅜㅜ"><a href="#ㅜㅜ" class="headerlink" title="ㅜㅜ"></a>ㅜㅜ</h2><ul>
+<li>주피터노트북 상에서 작업하고 거기서 연동해서 바로 블로그에 올릴수는 없을까.</li>
+</ul>
+]]></content>
   </entry>
   <entry>
     <title>Ch 04. Word2vec 개선</title>
