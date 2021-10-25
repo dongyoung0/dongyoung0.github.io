@@ -1,72 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Ch 03. Word2vec</title>
-    <url>/2021/10/18/Ch03%20word2vec/</url>
-    <content><![CDATA[<h3 id="기존-통계-기반-기법의-문제점"><a href="#기존-통계-기반-기법의-문제점" class="headerlink" title="기존 통계 기반 기법의 문제점"></a>기존 통계 기반 기법의 문제점</h3><ul>
-<li>단어의 개수가 $N$개일 때 Co-occurence matrix의 크기는 $N \times N$으로 너무 큼.</li>
-<li>SVD를 사용하여 차원 축소를 진행하는데, 이때 SVD를 적용하는 비용도 $O(n^3)$으로 너무 큼.</li>
-</ul>
-<h3 id="추론-기반-기법"><a href="#추론-기반-기법" class="headerlink" title="추론 기반 기법"></a>추론 기반 기법</h3><ul>
-<li>Neural Network처럼 학습 데이터를 미니배치로 나눠서 순차적으로 학습.</li>
-</ul>
-<p><img src="../image/nlp-from-scratch/fig%203-1.png" alt="fig 3-1.png" style="zoom:50%;" /></p>
-<h2 id="CBOW-Continuous-Bag-Of-Words"><a href="#CBOW-Continuous-Bag-Of-Words" class="headerlink" title="CBOW(Continuous Bag-Of-Words)"></a>CBOW(Continuous Bag-Of-Words)</h2><ul>
-<li>주변 단어의 맥락(context)이 주어졌을때 무슨 단어(target)가 들어갈지 추측하는 과정.</li>
-</ul>
-<p><img src="../image/nlp-from-scratch/fig%203-2.png" alt="fig 3-2.png" style="zoom:50%;" /></p>
-<ul>
-<li>학습시 사용한 말뭉치(corpus)에 따라 얻게 되는 단어의 분산 표현이 다름.</li>
-<li>가중치를 다시 학습할 수 있어서, 단어의 분산표현 갱신이나 새로운 단어 추가를 효육적으로 수행할 수 있음</li>
-</ul>
-<h3 id="학습-과정"><a href="#학습-과정" class="headerlink" title="학습 과정"></a>학습 과정</h3><p><img src="../image/nlp-from-scratch/fig%203-12.png" alt="fig 3-12.png" style="zoom:50%;" /></p>
-<ol>
-<li>context, target을 one-hot vector로 변환</li>
-<li>해당 vector들을 input 으로 넣음 (이 때 input layer의 개수는 입력시키는 단어의 개수와 같음)</li>
-<li>hidden layer에서 각 input layer들의 값의 평균을 계산</li>
-<li>Softmax를 통해 해당 단어가 해당 자리에 나타날 확률을 계산</li>
-<li>Cross-entropy error를 통해 Loss 계산, 학습</li>
-</ol>
-<h3 id="가중치"><a href="#가중치" class="headerlink" title="가중치"></a>가중치</h3><ul>
-<li>CBOW 모델에는 가중치가 2개 존재함</li>
-</ul>
-<p><img src="../image/nlp-from-scratch/fig%203-15.png" alt="fig 3-15.png" style="zoom:50%;" /></p>
-<ul>
-<li>$W_{in}$의 각 행(row)이 각 단어의 분산표현을 나타냄</li>
-<li>$W_{out}$에도 각 단어의 의미가 열(column)으로 저장됨</li>
-<li>이 때 word2vec에서는 보통 $W_{in}$만 사용할 때 결과가 좋음(특히 skip-gram)</li>
-<li>GloVE에서는 두 가중치를 더해서 사용했을 때 더 좋은 결과를 얻음</li>
-</ul>
-<h3 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h3><ul>
-<li>CBOW와 다르게 target으로부터 주변 context를 추측하는 모델</li>
-</ul>
-<p><img src="../image/nlp-from-scratch/fig%203-23.png" alt="fig 3-23.png" style="zoom:50%;" /></p>
-<ul>
-<li>CBOW보다 계산 비용이 크지만 corpus가 커질수록 성능이 뛰어난 경향을 보임.</li>
-</ul>
-<h3 id="통계-기반-vs-추론-기반"><a href="#통계-기반-vs-추론-기반" class="headerlink" title="통계 기반 vs 추론 기반"></a>통계 기반 vs 추론 기반</h3><ol>
-<li>단어의 분산 표현을 수정하고 싶을 때<ul>
-<li>통계 기반 기법은 co-occurence matrix를 새로 만들어야 하는 반면</li>
-<li>추론 기반 기법(word2vec)은 기존 가중치를 초깃값으로 다시 학습하면 되기 때문에 효율적으로 갱신 가능함</li>
-</ul>
-</li>
-<li>성능면에서는 통계 기반 / 추론 기반 기법의 우열을 따지기 어려움</li>
-<li>두 기법은 연관이 있음<ul>
-<li>skip-gram과 네거티브 샘플링을 이용한 모델은 co-occurence matrix에 특수한 행렬 분해를 적용한 것과 같음</li>
-<li>GloVe : 두 기법을 융합한 기법</li>
-</ul>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>NLP</category>
-      </categories>
-      <tags>
-        <tag>nlp</tag>
-        <tag>from-scratch</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ch 02. 단어의 분산 표현</title>
     <url>/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/</url>
     <content><![CDATA[<h2 id="단어의-의미"><a href="#단어의-의미" class="headerlink" title="단어의 의미"></a>단어의 의미</h2><ul>
@@ -102,8 +36,97 @@
         <category>NLP</category>
       </categories>
       <tags>
-        <tag>from-scratch</tag>
         <tag>NLP</tag>
+        <tag>from-scratch</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ch 03. Word2vec</title>
+    <url>/2021/10/18/Ch03%20word2vec/</url>
+    <content><![CDATA[<h2 id="추론-기반-기법"><a href="#추론-기반-기법" class="headerlink" title="추론 기반 기법"></a>추론 기반 기법</h2><h3 id="기존-통계-기반-기법의-문제점"><a href="#기존-통계-기반-기법의-문제점" class="headerlink" title="기존 통계 기반 기법의 문제점"></a>기존 통계 기반 기법의 문제점</h3><ul>
+<li>단어의 개수가 $N$개일 때 Co-occurence matrix의 크기는 $N \times N$으로 너무 큼.</li>
+<li>SVD를 사용하여 차원 축소를 진행하는데, 이때 SVD를 적용하는 비용도 $O(n^3)$으로 너무 큼.</li>
+</ul>
+<h3 id="개선-방법"><a href="#개선-방법" class="headerlink" title="개선 방법"></a>개선 방법</h3><ul>
+<li>Neural Network처럼 학습 데이터를 미니배치로 나눠서 순차적으로 학습.</li>
+</ul>
+<p><img src="/image/nlp-from-scratch/fig%203-1.png" alt="3-1"></p>
+<h2 id="CBOW-Continuous-Bag-Of-Words"><a href="#CBOW-Continuous-Bag-Of-Words" class="headerlink" title="CBOW(Continuous Bag-Of-Words)"></a>CBOW(Continuous Bag-Of-Words)</h2><ul>
+<li>주변 단어의 맥락(context)이 주어졌을때 무슨 단어(target)가 들어갈지 추측하는 과정.</li>
+</ul>
+<p><img src="/image/nlp-from-scratch/fig%203-2.png" alt="3-2"></p>
+<ul>
+<li>학습시 사용한 말뭉치(corpus)에 따라 얻게 되는 단어의 분산 표현이 다름.</li>
+<li>가중치를 다시 학습할 수 있어서, 단어의 분산표현 갱신이나 새로운 단어 추가를 효육적으로 수행할 수 있음</li>
+</ul>
+<h3 id="학습-과정"><a href="#학습-과정" class="headerlink" title="학습 과정"></a>학습 과정</h3><p><img src="/image/nlp-from-scratch/fig%203-12.png" alt="3-12"></p>
+<ol>
+<li>context, target을 one-hot vector로 변환</li>
+<li>해당 vector들을 input 으로 넣음 (이 때 input layer의 개수는 입력시키는 단어의 개수와 같음)</li>
+<li>hidden layer에서 각 input layer들의 값의 평균을 계산</li>
+<li>Softmax를 통해 해당 단어가 해당 자리에 나타날 확률을 계산</li>
+<li>Cross-entropy error를 통해 Loss 계산, 학습</li>
+</ol>
+<h3 id="가중치"><a href="#가중치" class="headerlink" title="가중치"></a>가중치</h3><ul>
+<li>CBOW 모델에는 가중치가 2개 존재함</li>
+</ul>
+<p><img src="/image/nlp-from-scratch/fig%203-15.png" alt="3-15"></p>
+<ul>
+<li>$W_{in}$의 각 행(row)이 각 단어의 분산표현을 나타냄</li>
+<li>$W_{out}$에도 각 단어의 의미가 열(column)으로 저장됨</li>
+<li>이 때 word2vec에서는 보통 $W_{in}$만 사용할 때 결과가 좋음(특히 skip-gram)</li>
+<li>GloVE에서는 두 가중치를 더해서 사용했을 때 더 좋은 결과를 얻음</li>
+</ul>
+<h3 id="구현"><a href="#구현" class="headerlink" title="구현"></a>구현</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleCBOW</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>) </span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(H, V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># layer 생성</span></span><br><span class="line">        self.in_layer0 = MatMul(W_in)</span><br><span class="line">        self.in_layer1 = MatMul(W_in)</span><br><span class="line">        self.out_layer = MatMul(W_out)</span><br><span class="line">        self.loss_layer = SoftmaxWithLoss()</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#list에 모으기</span></span><br><span class="line">        layers = [self.in_layer0, self.in_layer1, self.out_layer]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h0 = self.in_layer0.forward(contexts[:, <span class="number">0</span>])</span><br><span class="line">        h1 = self.in_layer1.forward(contexts[:, <span class="number">1</span>])</span><br><span class="line">        h = (h0 + h1) * <span class="number">0.5</span></span><br><span class="line">        score = self.out_layer.forward(h)</span><br><span class="line">        loss = self.loss_layer.forward(score, target)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        ds = self.loss_layer.backward(dout)</span><br><span class="line">        da = self.out_layer.backward(ds)</span><br><span class="line">        da *= <span class="number">0.5</span></span><br><span class="line">        self.in_layer1.backward(da)</span><br><span class="line">        self.in_layer0.backward(da)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><ul>
+<li>CBOW와 다르게 target으로부터 주변 context를 추측하는 모델</li>
+</ul>
+<p><img src="/image/nlp-from-scratch/fig%203-23.png" alt="3-23"></p>
+<ul>
+<li>CBOW보다 계산 비용이 크지만 corpus가 커질수록 성능이 뛰어난 경향을 보임.</li>
+</ul>
+<h3 id="구현-1"><a href="#구현-1" class="headerlink" title="구현"></a>구현</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SimpleSkipGram</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>) </span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(H, V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># layer 생성 : CBOW와 다르게 input layer가 1개, loss가 여러개</span></span><br><span class="line">        self.in_layer = MatMul(W_in)</span><br><span class="line">        self.out_layer = MatMul(W_out)</span><br><span class="line">        self.loss_layer1 = SoftmaxWithLoss()</span><br><span class="line">        self.loss_layer2 = SoftmaxWithLoss()</span><br><span class="line">        </span><br><span class="line">        <span class="comment">#list에 모으기</span></span><br><span class="line">        layers = [self.in_layer, self.out_layer, self.loss_layer1, self.loss_layer2]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h = self.in_layer.forward(target)</span><br><span class="line">        score = self.out_layer.forward(h)</span><br><span class="line">        loss = self.loss_layer1.forward(score, contexts[:, <span class="number">0</span>]) + self.loss_layer2.forward(score, contexts[:, <span class="number">1</span>])</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dscore = self.loss_layer1.backward(dout) + self.loss_layer2.backward(dout)</span><br><span class="line">        dh = self.out_layer.backward(dscore)</span><br><span class="line">        self.in_layer.backward(dh)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="통계-기반-vs-추론-기반"><a href="#통계-기반-vs-추론-기반" class="headerlink" title="통계 기반 vs 추론 기반"></a>통계 기반 vs 추론 기반</h2><ol>
+<li>단어의 분산 표현을 수정하고 싶을 때<ul>
+<li>통계 기반 기법은 co-occurence matrix를 새로 만들어야 하는 반면</li>
+<li>추론 기반 기법(word2vec)은 기존 가중치를 초깃값으로 다시 학습하면 되기 때문에 효율적으로 갱신 가능함</li>
+</ul>
+</li>
+<li>성능면에서는 통계 기반 / 추론 기반 기법의 우열을 따지기 어려움</li>
+<li>두 기법은 연관이 있음<ul>
+<li>skip-gram과 네거티브 샘플링을 이용한 모델은 co-occurence matrix에 특수한 행렬 분해를 적용한 것과 같음</li>
+<li>GloVe : 두 기법을 융합한 기법</li>
+</ul>
+</li>
+</ol>
+<h2 id="학습"><a href="#학습" class="headerlink" title="학습"></a>학습</h2><h3 id="데이터-준비"><a href="#데이터-준비" class="headerlink" title="데이터 준비"></a>데이터 준비</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">window_size = <span class="number">1</span></span><br><span class="line">hidden_size = <span class="number">5</span></span><br><span class="line">batch_size = <span class="number">3</span></span><br><span class="line">max_epoch = <span class="number">1000</span></span><br><span class="line"></span><br><span class="line">text = <span class="string">&#x27;You say goodbye and I say hello.&#x27;</span></span><br><span class="line">corpus, word_to_id, id_to_word = preprocess(text)</span><br><span class="line"></span><br><span class="line">vocab_size = <span class="built_in">len</span>(word_to_id)</span><br><span class="line">contexts, target = create_contexts_target(corpus, window_size)</span><br><span class="line">target = convert_one_hot(target, vocab_size)</span><br><span class="line">contexts = convert_one_hot(contexts, vocab_size)</span><br></pre></td></tr></table></figure>
+<h3 id="Simple-CBOW"><a href="#Simple-CBOW" class="headerlink" title="Simple CBOW"></a>Simple CBOW</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">model = SimpleCBOW(vocab_size, hidden_size)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line"></span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size, epoch_print = 100)</span><br><span class="line">trainer.plot()</span><br></pre></td></tr></table></figure>
+<p><img src="/image/nlp-from-scratch/simple-cbow.png" alt="cbow"></p>
+<h4 id="단어의-분산-표현"><a href="#단어의-분산-표현" class="headerlink" title="단어의 분산 표현"></a>단어의 분산 표현</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">word_vecs = model.word_vecs</span><br><span class="line"><span class="keyword">for</span> word_id, word <span class="keyword">in</span> id_to_word.items():</span><br><span class="line">    <span class="built_in">print</span>(word, word_vecs[word_id])</span><br></pre></td></tr></table></figure>
+<pre><code>you [-1.0762557  1.06351   -1.1074004  1.1025865 -1.5765114]
+say [ 1.1755433 -1.1957825  1.1767687 -1.1574136  1.088242 ]
+goodbye [-0.9526097   0.96037304 -0.86772525  0.9271136  -0.14380391]
+and [ 0.6333946  -0.4580956   0.8180077  -0.80556715  1.8256714 ]
+i [-0.9568056   0.941875   -0.8830476   0.92261046 -0.1562804 ]
+hello [-1.062895   1.0663131 -1.1106303  1.0801047 -1.561029 ]
+. [ 1.3913976 -1.4761357  1.2531542 -1.2582308 -0.9183479]
+</code></pre><h3 id="Simple-skip-gram"><a href="#Simple-skip-gram" class="headerlink" title="Simple skip-gram"></a>Simple skip-gram</h3><h4 id="학습-1"><a href="#학습-1" class="headerlink" title="학습"></a>학습</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = SimpleSkipGram(vocab_size, hidden_size)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line"></span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size, epoch_print = <span class="number">100</span>)</span><br><span class="line">trainer.plot()</span><br></pre></td></tr></table></figure>
+<p><img src="/image/nlp-from-scratch/simple_skipgram.png" alt="skip-gram"></p>
+<h4 id="단어의-분산-표현-1"><a href="#단어의-분산-표현-1" class="headerlink" title="단어의 분산 표현"></a>단어의 분산 표현</h4><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">word_vecs = model.word_vecs</span><br><span class="line"><span class="keyword">for</span> word_id, word <span class="keyword">in</span> id_to_word.items():</span><br><span class="line">    <span class="built_in">print</span>(word, word_vecs[word_id])</span><br></pre></td></tr></table></figure>
+<pre><code>you [ 0.00152862  0.00943199  0.00498039 -0.01105605 -0.0090797 ]
+say [ 0.40928003  0.9681609  -0.60750085  0.29873264  0.7500545 ]
+goodbye [-0.6842289  -0.80604213  0.869326    1.2251657  -0.75968397]
+and [ 1.1537582  0.9375379 -1.0481284 -1.3354286  1.0159786]
+i [-0.66723204 -0.8001625   0.89004374  1.2151715  -0.761566  ]
+hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
+. [-0.00162247  0.00803852 -0.00782559 -0.01251176  0.00806981]
+</code></pre>]]></content>
+      <categories>
+        <category>NLP</category>
+      </categories>
+      <tags>
+        <tag>from-scratch</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>
@@ -171,6 +194,293 @@
       <tags>
         <tag>data</tag>
         <tag>sql</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ch 04. Word2vec 개선</title>
+    <url>/2021/10/22/ch04%20CBOW/</url>
+    <content><![CDATA[<h2 id="Simple-CBOW의-문제점"><a href="#Simple-CBOW의-문제점" class="headerlink" title="Simple CBOW의 문제점"></a>Simple CBOW의 문제점</h2><ul>
+<li>window size를 1로 한정했음<ul>
+<li>원하는 window size에 대해 계산할 수 있도록 개선 </li>
+</ul>
+</li>
+<li>어휘수가 많아질수록 계산량이 매우 커짐</li>
+<li>특히 두가지 과정이 bottleneck<ol>
+<li>input(one-hot vector)와 weight(W_in)의 곱셈</li>
+<li>hidden layer 에서 output으로 갈 때 weight(W_out)의 곱셈, softmax 계산</li>
+</ol>
+</li>
+<li>해결 방안<ol>
+<li>Embedding layer를 통해 계산량 감소</li>
+<li>Negative sampling을 통해 loss 계산 과정 개선</li>
+</ol>
+</li>
+</ul>
+<h2 id="Embedding-layer"><a href="#Embedding-layer" class="headerlink" title="Embedding layer"></a>Embedding layer</h2><ul>
+<li><p>one-hot vector와 W_in을 곱하는 과정은 W_in의 특정 row를 추출하는 것과 같음</p>
+<p><img src="/image/nlp-from-scratch/fig%204-3.png" alt="4-3"></p>
+</li>
+<li><p>matrix 연산을 하지 않고 row vector를 추출하는 <code>Embedding layer</code>를 통해 계산량 개선</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Embedding</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W</span>):</span></span><br><span class="line">        self.params = [W]</span><br><span class="line">        self.grads = [np.zeros_like(W)]</span><br><span class="line">        self.idx = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, idx</span>):</span></span><br><span class="line">        W, = self.params</span><br><span class="line">        output = W[self.idx]</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">        dW, = self.grads</span><br><span class="line">        dW[...] = <span class="number">0</span> <span class="comment"># </span></span><br><span class="line"><span class="comment">#         # 좋지 않은 예. idx의 원소가 중복인 경우 문제가 생김</span></span><br><span class="line"><span class="comment">#         dW[self.idx] = dout </span></span><br><span class="line"><span class="comment">#         for i, word_id in enumerate(self.idx):</span></span><br><span class="line"><span class="comment">#             dW[word_id] += dout[i]</span></span><br><span class="line">        np.add.at(dW, self.idx, dout) <span class="comment"># cupy 버전 문제로 gpu 사용 시 수정해야 함</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="Multi-class-gt-binary"><a href="#Multi-class-gt-binary" class="headerlink" title="Multi-class -&gt; binary"></a>Multi-class -&gt; binary</h2><ul>
+<li>다중 분류(multi-class classification)을 이진 분류(binary classification)으로 근사하려는 것 <ul>
+<li>해당 자리에 target이 나타날 확률 -&gt; 해당 자리에 위치한 단어가 target인지 아닌지로 변환  </li>
+</ul>
+</li>
+<li><p>W_out의 target에 해당하는 column만 추출 후 hidden layer 뉴런과 내적 (Matrix x vector를 vector간 내적으로 변환)</p>
+<ul>
+<li>Multi-class 에서 Softmax -&gt; cross-entropy loss를 사용했던 것에서</li>
+<li>Binary의 경우 Sigmoid -&gt; cross-entropy loss 사용 </li>
+</ul>
+</li>
+<li><p>이때 Sigmoid layer와 Cross-entropy를 섞어서 back-propagation시 미분값이 $y-t$로 간단함.<br><img src="/image/nlp-from-scratch/fig%204-10.png" alt="4-10"></p>
+</li>
+</ul>
+<h3 id="전체-과정"><a href="#전체-과정" class="headerlink" title="전체 과정"></a>전체 과정</h3><p><img src="/image/nlp-from-scratch/fig%204-12.png" alt="4-12"></p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># h와 W_out의 embedding vector의 dot 부분 구현</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmbeddingDot</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W</span>):</span></span><br><span class="line">        self.embed = Embedding(W)</span><br><span class="line">        self.params = self.embed.params</span><br><span class="line">        self.grads = self.embed.grads</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, h, idx</span>):</span></span><br><span class="line">        target_W = self.embed.forward(idx) <span class="comment"># row 추출</span></span><br><span class="line">        out = np.<span class="built_in">sum</span>(target_W + h, axis=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        self.cache = (h, target_W)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">        h, target_W = self.cache</span><br><span class="line">        <span class="comment"># </span></span><br><span class="line">        dout = dout.reshape(dout.shape[<span class="number">0</span>], <span class="number">1</span>)</span><br><span class="line">        dtarget_W = dout * h</span><br><span class="line">        self.embed.backward(dtarget_W)</span><br><span class="line">        dh = dout * target_W</span><br><span class="line">        <span class="keyword">return</span> dh</span><br></pre></td></tr></table></figure>
+<h2 id="Negative-sampling"><a href="#Negative-sampling" class="headerlink" title="Negative sampling"></a>Negative sampling</h2><ul>
+<li>binary classification으로 변환함으로써 계산량을 줄였음.</li>
+<li>하지만 정답(positive)에 대해서만 학습했고, 오답(negative)에 대해서는 학습을 안함<ul>
+<li>정답을 입력했을때 출력이 1에 가까운 방향으로 학습했음.</li>
+<li>하지만 오답을 입력했을때 출력이 0에 가까워지도록 만들어줘야함.</li>
+</ul>
+</li>
+<li>모든 negative에 대해 학습을 하기에는 어휘 수가 너무 늘어남<ul>
+<li>적은 수의 negative를 sampling해서 사용.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h3><ul>
+<li>자주 등장하는 단어가 많이 sampling되도록 각 단어의 출현 횟수의 확률분포에 따라 단어를 sampling.</li>
+<li>negative를 적게 sampling하므로 자주 나오지 않는 단어에 대해 학습하는 것 보단 흔하게 나오는 단어를 사용하는 것이 나음</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 직접 구현한 것인데 아래 list comprehension이 너무 오래 걸려서 수정 필요</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnigramSampler</span>:</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    corpus에서 target에 대한 negative sampling</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, corpus, power, sample_size</span>):</span></span><br><span class="line">        self.corpus = corpus</span><br><span class="line">        self.power = power</span><br><span class="line">        self.sample_size = sample_size</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_negative_sample</span>(<span class="params">self, target</span>):</span></span><br><span class="line">        neg_sample = []</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> target:</span><br><span class="line">            <span class="comment"># words : target을 제외한 단어 집합</span></span><br><span class="line">            words = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="built_in">max</span>(corpus)+<span class="number">1</span>))</span><br><span class="line">            words.remove(t)</span><br><span class="line">            <span class="comment"># 확률분포 계산 </span></span><br><span class="line">            p = [<span class="built_in">list</span>(corpus).count(word)/<span class="built_in">len</span>(corpus) <span class="keyword">for</span> word <span class="keyword">in</span> words]</span><br><span class="line">            new_p = np.power(p, power)</span><br><span class="line">            new_p /= np.<span class="built_in">sum</span>(new_p)</span><br><span class="line">            neg = np.random.choice(words, sample_size, p = new_p, replace=<span class="literal">False</span>)</span><br><span class="line">            neg_sample.append(neg)</span><br><span class="line">        <span class="keyword">return</span> neg_sample</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">corpus = np.array([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">power = <span class="number">0.75</span></span><br><span class="line">sample_size = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">sampler = UnigramSampler(corpus, power, sample_size)</span><br><span class="line">target = np.array([<span class="number">1</span>, <span class="number">3</span>, <span class="number">0</span>])</span><br><span class="line">negative_sample = sampler.get_negative_sample(target)</span><br><span class="line"><span class="built_in">print</span>(negative_sample)</span><br></pre></td></tr></table></figure>
+<pre><code>[array([3, 4]), array([0, 4]), array([4, 2])]
+</code></pre><h3 id="Negative-Sampling-구현"><a href="#Negative-Sampling-구현" class="headerlink" title="Negative Sampling 구현"></a>Negative Sampling 구현</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NegativeSamplingLoss</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W, corpus, power = <span class="number">0.75</span>, sample_size = <span class="number">5</span></span>):</span></span><br><span class="line">        self.sampler = UnigramSampler(corpus, power, sample_size)</span><br><span class="line">        self.sample_size = sample_size <span class="comment"># 샘플링 횟수</span></span><br><span class="line">        self.loss_layer = [SigmoidWithLoss() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span> (sample_size + <span class="number">1</span>)]</span><br><span class="line">        self.embed_dot_layers = [EmbeddingDot(W) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(sample_size + <span class="number">1</span>)]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.embed_dot_layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, h, target</span>):</span></span><br><span class="line">        batch_size = target.shape[<span class="number">0</span>]</span><br><span class="line">        neg_sample = self.sampler.get_negative_sample(target)</span><br><span class="line">        <span class="comment"># positive</span></span><br><span class="line">        score = self.embed_dot_layers[<span class="number">0</span>].forward(h, target)</span><br><span class="line">        pos_label = np.ones(batch_size).astype(<span class="built_in">int</span>)</span><br><span class="line">        loss = self.loss_layers[<span class="number">0</span>].forward(score, pos_label)</span><br><span class="line">        <span class="comment"># negative</span></span><br><span class="line">        neg_label = np.zeors(batcs_size).astype(<span class="built_in">int</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.sample_size):</span><br><span class="line">            neg_target = neg_sample[:, i]</span><br><span class="line">            score = self.embed_dot_layers[i].forward(h, neg_target)</span><br><span class="line">            loss = self.loss_layers[i].forward(score, neg_label)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dh = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> l0, l1 <span class="keyword">in</span> <span class="built_in">zip</span>(self.loss_layers, self.embed_dot_layers):</span><br><span class="line">            dscore = l0.backwawrd(dout)</span><br><span class="line">            dh += l1.backward(dscore)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> dh</span><br></pre></td></tr></table></figure>
+<h2 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h2><ul>
+<li>Embedding, Negative Sampling을 적용하여 개선된 CBOW 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CBOW</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size, window_size, corpus</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer 생성</span></span><br><span class="line">        self.in_layers = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * window_size):</span><br><span class="line">            layer = Embedding(W_in)</span><br><span class="line">            self.in_layers.append(layer)</span><br><span class="line">        self.neg_loss = NegativeSamplingLoss(W_out, corpus, power=<span class="number">0.75</span>, sample_size=<span class="number">5</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer, parameter 정리</span></span><br><span class="line">        layers = self.in_layers + [self.neg_loss]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산 표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.in_layers):</span><br><span class="line">            h += layer.forward(contexts[:, i])</span><br><span class="line">        h /= <span class="built_in">len</span>(self.in_layers)</span><br><span class="line">        loss = self.neg_loss.forward(h, target)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.neg_loss.backward(dout)</span><br><span class="line">        dout /= <span class="built_in">len</span>(self.in_layers)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.in_layers:</span><br><span class="line">            layer.backward(dout)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><ul>
+<li>마찬가지로 개선된 Skip-gram 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SkipGram</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size, window_size, corpus</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer 생성</span></span><br><span class="line">        self.in_layer = Embedding(W_in)</span><br><span class="line">        self.loss_layers = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * window_size):</span><br><span class="line">            layer = NegativeSamplingLoss(W_out, corpus, power=<span class="number">0.75</span>, sample_size=<span class="number">5</span>)</span><br><span class="line">            self.loss_layers.append(layer)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer, parameter 정리</span></span><br><span class="line">        layers = [self.in_layer] + self.loss_layers</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산 표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">          </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h = self.in_layer.forward(target)</span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.loss_layers):</span><br><span class="line">            loss = layer.forward(h, contexts[:, i])</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dh = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.loss_layers):</span><br><span class="line">            dh += layer.backward(dout)</span><br><span class="line">        self.in_layer.backward(dh)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="학습"><a href="#학습" class="headerlink" title="학습"></a>학습</h2><h3 id="데이터-준비"><a href="#데이터-준비" class="headerlink" title="데이터 준비"></a>데이터 준비</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># hyperparameter</span></span><br><span class="line">window_size = <span class="number">5</span></span><br><span class="line">hidden_size = <span class="number">100</span></span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line">max_epoch = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># load data</span></span><br><span class="line">corpus, word_to_id, id_to_word = ptb.load_data(<span class="string">&#x27;train&#x27;</span>)</span><br><span class="line">vocab_size = <span class="built_in">len</span>(word_to_id)</span><br><span class="line">contexts, target = create_contexts_target(corpus, window_size)</span><br></pre></td></tr></table></figure>
+<h3 id="CBOW-1"><a href="#CBOW-1" class="headerlink" title="CBOW"></a>CBOW</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = CBOW(vocab_size, hidden_size, window_size, corpus)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size)</span><br></pre></td></tr></table></figure>
+<h4 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h4><p><img src="/image/nlp-from-scratch/4-cbow.png" alt="cbow"></p>
+<h4 id="Most-similar-words"><a href="#Most-similar-words" class="headerlink" title="Most similar words"></a>Most similar words</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">you</th>
+<th style="text-align:center">year</th>
+<th style="text-align:center">car</th>
+<th style="text-align:center">toyota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">we (0.7427)</td>
+<td style="text-align:center">month (0.8423)</td>
+<td style="text-align:center">window (0.6211)</td>
+<td style="text-align:center">seita (0.6777)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">i (0.7134)</td>
+<td style="text-align:center">summer (0.7666)</td>
+<td style="text-align:center">luxury (0.5762)</td>
+<td style="text-align:center">honda (0.6548)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">your (0.6172)</td>
+<td style="text-align:center">week (0.7637)</td>
+<td style="text-align:center">cars (0.5723)</td>
+<td style="text-align:center">chevrolet (0.6465)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">someone (0.5820)</td>
+<td style="text-align:center">spring (0.7329)</td>
+<td style="text-align:center">auto (0.5703)</td>
+<td style="text-align:center">mazda (0.6201)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">weird (0.5801)</td>
+<td style="text-align:center">decade (0.6812)</td>
+<td style="text-align:center">merkur (0.5547)</td>
+<td style="text-align:center">nissan (0.6118)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="Analogy"><a href="#Analogy" class="headerlink" title="Analogy"></a>Analogy</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">king:man = queen:?</th>
+<th style="text-align:center">take:took = go:?</th>
+<th style="text-align:center">car:cars = child:?</th>
+<th style="text-align:center">good:better = bad:?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">woman (5.3945)</td>
+<td style="text-align:center">‘re (4.7070)</td>
+<td style="text-align:center">a.m (6.7891)</td>
+<td style="text-align:center">rather (5.5977)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">lady (4.5469)</td>
+<td style="text-align:center">were (4.1641)</td>
+<td style="text-align:center">rape (5.6953)</td>
+<td style="text-align:center">more (5.4531)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">kid (4.3555)</td>
+<td style="text-align:center">eurodollars (4.1094)</td>
+<td style="text-align:center">daffynition (5.3945)</td>
+<td style="text-align:center">less (5.2461)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">recital (4.3125)</td>
+<td style="text-align:center">are (3.9766)</td>
+<td style="text-align:center">children: (5.2969)</td>
+<td style="text-align:center">greater (4.2148)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">father (4.2617)</td>
+<td style="text-align:center">came (3.9668)</td>
+<td style="text-align:center">women (4.9609)</td>
+<td style="text-align:center">faster (3.8555)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Skip-gram-1"><a href="#Skip-gram-1" class="headerlink" title="Skip-gram"></a>Skip-gram</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = SkipGram(vocab_size, hidden_size, window_size, corpus)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size)</span><br></pre></td></tr></table></figure>
+<h4 id="Loss-1"><a href="#Loss-1" class="headerlink" title="Loss"></a>Loss</h4><p><img src="/image/nlp-from-scratch/4-skipgram.png" alt="cbow"></p>
+<h4 id="Most-similar-words-1"><a href="#Most-similar-words-1" class="headerlink" title="Most similar words"></a>Most similar words</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">you</th>
+<th style="text-align:center">year</th>
+<th style="text-align:center">car</th>
+<th style="text-align:center">toyota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">yourself (0.6670)</td>
+<td style="text-align:center">month (0.6309)</td>
+<td style="text-align:center">cars (0.5928)</td>
+<td style="text-align:center">motor (0.7236)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">your (0.6660)</td>
+<td style="text-align:center">week (0.6084)</td>
+<td style="text-align:center">auto (0.5693)</td>
+<td style="text-align:center">honda (0.6719)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">weird (0.6567)</td>
+<td style="text-align:center">earlier (0.5762)</td>
+<td style="text-align:center">luxury (0.5635)</td>
+<td style="text-align:center">lexus (0.6675)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">i (0.6494)</td>
+<td style="text-align:center">quarter (0.5537)</td>
+<td style="text-align:center">chevrolet (0.5552)</td>
+<td style="text-align:center">infiniti (0.6396)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">ask (0.6152)</td>
+<td style="text-align:center">decade (0.5269)</td>
+<td style="text-align:center">truck (0.5454)</td>
+<td style="text-align:center">minivans (0.5870)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="Analogy-1"><a href="#Analogy-1" class="headerlink" title="Analogy"></a>Analogy</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">king:man =  queen:?</th>
+<th style="text-align:center">take:took =  go:?</th>
+<th style="text-align:center">car:cars =  child:?</th>
+<th style="text-align:center">good:better  = bad:?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">teacher (1.8574)</td>
+<td style="text-align:center">yards (1.8213)</td>
+<td style="text-align:center">rape (2.3008)</td>
+<td style="text-align:center">worse (1.7891)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">discarded (1.7959)</td>
+<td style="text-align:center">ran (1.6133)</td>
+<td style="text-align:center">children (1.9131)</td>
+<td style="text-align:center">gyrations (1.6816)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">hero (1.7451)</td>
+<td style="text-align:center">amsterdam (1.4795)</td>
+<td style="text-align:center">patients (1.8662)</td>
+<td style="text-align:center">rough (1.6816)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">kasparov (1.7334)</td>
+<td style="text-align:center">crowded (1.4561)</td>
+<td style="text-align:center">versions (1.8359)</td>
+<td style="text-align:center">ever (1.5303)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">murdered (1.7236)</td>
+<td style="text-align:center">marched (1.4512)</td>
+<td style="text-align:center">non-violent (1.7989)</td>
+<td style="text-align:center">clobbered (1.5166)</td>
+</tr>
+</tbody>
+</table>
+</div>
+]]></content>
+      <categories>
+        <category>NLP</category>
+        <category>from-scratch</category>
+      </categories>
+      <tags>
+        <tag>from-scratch</tag>
+        <tag>nlp</tag>
       </tags>
   </entry>
   <entry>

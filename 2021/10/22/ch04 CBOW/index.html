@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Simple CBOW의 문제점 window size를 1로 한정했음 원하는 window size에 대해 계산할 수 있도록 개선    어휘수가 많아질수록 계산량이 매우 커짐 특히 두가지 과정이 bottleneck input(one-hot vector)와 weight(W_in)의 곱셈 hidden layer 에서 output으로 갈 때 weight(W_out)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ch 04. Word2vec 개선">
+<meta property="og:url" content="http://example.com/2021/10/22/ch04%20CBOW/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="Simple CBOW의 문제점 window size를 1로 한정했음 원하는 window size에 대해 계산할 수 있도록 개선    어휘수가 많아질수록 계산량이 매우 커짐 특히 두가지 과정이 bottleneck input(one-hot vector)와 weight(W_in)의 곱셈 hidden layer 에서 output으로 갈 때 weight(W_out)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%204-3.png">
+<meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%204-10.png">
+<meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%204-12.png">
+<meta property="og:image" content="http://example.com/image/nlp-from-scratch/4-cbow.png">
+<meta property="og:image" content="http://example.com/image/nlp-from-scratch/4-skipgram.png">
+<meta property="article:published_time" content="2021-10-21T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-25T07:26:18.661Z">
+<meta property="article:author" content="Dongyoung Kim">
+<meta property="article:tag" content="from-scratch">
+<meta property="article:tag" content="nlp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/image/nlp-from-scratch/fig%204-3.png">
+
+<link rel="canonical" href="http://example.com/2021/10/22/ch04%20CBOW/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Ch 04. Word2vec 개선 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">공부한 내용을 정리하는 장소</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">8</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">7</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/22/ch04%20CBOW/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ch 04. Word2vec 개선<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/ch04%20CBOW.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-22 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-22T00:00:00+09:00">2021-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-25 16:26:18" itemprop="dateModified" datetime="2021-10-25T16:26:18+09:00">2021-10-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/from-scratch/" itemprop="url" rel="index"><span itemprop="name">from-scratch</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Simple-CBOW의-문제점"><a href="#Simple-CBOW의-문제점" class="headerlink" title="Simple CBOW의 문제점"></a>Simple CBOW의 문제점</h2><ul>
+<li>window size를 1로 한정했음<ul>
+<li>원하는 window size에 대해 계산할 수 있도록 개선 </li>
+</ul>
+</li>
+<li>어휘수가 많아질수록 계산량이 매우 커짐</li>
+<li>특히 두가지 과정이 bottleneck<ol>
+<li>input(one-hot vector)와 weight(W_in)의 곱셈</li>
+<li>hidden layer 에서 output으로 갈 때 weight(W_out)의 곱셈, softmax 계산</li>
+</ol>
+</li>
+<li>해결 방안<ol>
+<li>Embedding layer를 통해 계산량 감소</li>
+<li>Negative sampling을 통해 loss 계산 과정 개선</li>
+</ol>
+</li>
+</ul>
+<h2 id="Embedding-layer"><a href="#Embedding-layer" class="headerlink" title="Embedding layer"></a>Embedding layer</h2><ul>
+<li><p>one-hot vector와 W_in을 곱하는 과정은 W_in의 특정 row를 추출하는 것과 같음</p>
+<p><img src="/image/nlp-from-scratch/fig%204-3.png" alt="4-3"></p>
+</li>
+<li><p>matrix 연산을 하지 않고 row vector를 추출하는 <code>Embedding layer</code>를 통해 계산량 개선</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Embedding</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W</span>):</span></span><br><span class="line">        self.params = [W]</span><br><span class="line">        self.grads = [np.zeros_like(W)]</span><br><span class="line">        self.idx = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, idx</span>):</span></span><br><span class="line">        W, = self.params</span><br><span class="line">        output = W[self.idx]</span><br><span class="line">        <span class="keyword">return</span> output</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">        dW, = self.grads</span><br><span class="line">        dW[...] = <span class="number">0</span> <span class="comment"># </span></span><br><span class="line"><span class="comment">#         # 좋지 않은 예. idx의 원소가 중복인 경우 문제가 생김</span></span><br><span class="line"><span class="comment">#         dW[self.idx] = dout </span></span><br><span class="line"><span class="comment">#         for i, word_id in enumerate(self.idx):</span></span><br><span class="line"><span class="comment">#             dW[word_id] += dout[i]</span></span><br><span class="line">        np.add.at(dW, self.idx, dout) <span class="comment"># cupy 버전 문제로 gpu 사용 시 수정해야 함</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="Multi-class-gt-binary"><a href="#Multi-class-gt-binary" class="headerlink" title="Multi-class -&gt; binary"></a>Multi-class -&gt; binary</h2><ul>
+<li>다중 분류(multi-class classification)을 이진 분류(binary classification)으로 근사하려는 것 <ul>
+<li>해당 자리에 target이 나타날 확률 -&gt; 해당 자리에 위치한 단어가 target인지 아닌지로 변환  </li>
+</ul>
+</li>
+<li><p>W_out의 target에 해당하는 column만 추출 후 hidden layer 뉴런과 내적 (Matrix x vector를 vector간 내적으로 변환)</p>
+<ul>
+<li>Multi-class 에서 Softmax -&gt; cross-entropy loss를 사용했던 것에서</li>
+<li>Binary의 경우 Sigmoid -&gt; cross-entropy loss 사용 </li>
+</ul>
+</li>
+<li><p>이때 Sigmoid layer와 Cross-entropy를 섞어서 back-propagation시 미분값이 $y-t$로 간단함.<br><img src="/image/nlp-from-scratch/fig%204-10.png" alt="4-10"></p>
+</li>
+</ul>
+<h3 id="전체-과정"><a href="#전체-과정" class="headerlink" title="전체 과정"></a>전체 과정</h3><p><img src="/image/nlp-from-scratch/fig%204-12.png" alt="4-12"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># h와 W_out의 embedding vector의 dot 부분 구현</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">EmbeddingDot</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W</span>):</span></span><br><span class="line">        self.embed = Embedding(W)</span><br><span class="line">        self.params = self.embed.params</span><br><span class="line">        self.grads = self.embed.grads</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, h, idx</span>):</span></span><br><span class="line">        target_W = self.embed.forward(idx) <span class="comment"># row 추출</span></span><br><span class="line">        out = np.<span class="built_in">sum</span>(target_W + h, axis=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        self.cache = (h, target_W)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">        h, target_W = self.cache</span><br><span class="line">        <span class="comment"># </span></span><br><span class="line">        dout = dout.reshape(dout.shape[<span class="number">0</span>], <span class="number">1</span>)</span><br><span class="line">        dtarget_W = dout * h</span><br><span class="line">        self.embed.backward(dtarget_W)</span><br><span class="line">        dh = dout * target_W</span><br><span class="line">        <span class="keyword">return</span> dh</span><br></pre></td></tr></table></figure>
+<h2 id="Negative-sampling"><a href="#Negative-sampling" class="headerlink" title="Negative sampling"></a>Negative sampling</h2><ul>
+<li>binary classification으로 변환함으로써 계산량을 줄였음.</li>
+<li>하지만 정답(positive)에 대해서만 학습했고, 오답(negative)에 대해서는 학습을 안함<ul>
+<li>정답을 입력했을때 출력이 1에 가까운 방향으로 학습했음.</li>
+<li>하지만 오답을 입력했을때 출력이 0에 가까워지도록 만들어줘야함.</li>
+</ul>
+</li>
+<li>모든 negative에 대해 학습을 하기에는 어휘 수가 너무 늘어남<ul>
+<li>적은 수의 negative를 sampling해서 사용.</li>
+</ul>
+</li>
+</ul>
+<h3 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h3><ul>
+<li>자주 등장하는 단어가 많이 sampling되도록 각 단어의 출현 횟수의 확률분포에 따라 단어를 sampling.</li>
+<li>negative를 적게 sampling하므로 자주 나오지 않는 단어에 대해 학습하는 것 보단 흔하게 나오는 단어를 사용하는 것이 나음</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 직접 구현한 것인데 아래 list comprehension이 너무 오래 걸려서 수정 필요</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">UnigramSampler</span>:</span></span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    corpus에서 target에 대한 negative sampling</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, corpus, power, sample_size</span>):</span></span><br><span class="line">        self.corpus = corpus</span><br><span class="line">        self.power = power</span><br><span class="line">        self.sample_size = sample_size</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_negative_sample</span>(<span class="params">self, target</span>):</span></span><br><span class="line">        neg_sample = []</span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> target:</span><br><span class="line">            <span class="comment"># words : target을 제외한 단어 집합</span></span><br><span class="line">            words = <span class="built_in">list</span>(<span class="built_in">range</span>(<span class="built_in">max</span>(corpus)+<span class="number">1</span>))</span><br><span class="line">            words.remove(t)</span><br><span class="line">            <span class="comment"># 확률분포 계산 </span></span><br><span class="line">            p = [<span class="built_in">list</span>(corpus).count(word)/<span class="built_in">len</span>(corpus) <span class="keyword">for</span> word <span class="keyword">in</span> words]</span><br><span class="line">            new_p = np.power(p, power)</span><br><span class="line">            new_p /= np.<span class="built_in">sum</span>(new_p)</span><br><span class="line">            neg = np.random.choice(words, sample_size, p = new_p, replace=<span class="literal">False</span>)</span><br><span class="line">            neg_sample.append(neg)</span><br><span class="line">        <span class="keyword">return</span> neg_sample</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">corpus = np.array([<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>])</span><br><span class="line">power = <span class="number">0.75</span></span><br><span class="line">sample_size = <span class="number">2</span></span><br><span class="line"></span><br><span class="line">sampler = UnigramSampler(corpus, power, sample_size)</span><br><span class="line">target = np.array([<span class="number">1</span>, <span class="number">3</span>, <span class="number">0</span>])</span><br><span class="line">negative_sample = sampler.get_negative_sample(target)</span><br><span class="line"><span class="built_in">print</span>(negative_sample)</span><br></pre></td></tr></table></figure>
+<pre><code>[array([3, 4]), array([0, 4]), array([4, 2])]
+</code></pre><h3 id="Negative-Sampling-구현"><a href="#Negative-Sampling-구현" class="headerlink" title="Negative Sampling 구현"></a>Negative Sampling 구현</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NegativeSamplingLoss</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, W, corpus, power = <span class="number">0.75</span>, sample_size = <span class="number">5</span></span>):</span></span><br><span class="line">        self.sampler = UnigramSampler(corpus, power, sample_size)</span><br><span class="line">        self.sample_size = sample_size <span class="comment"># 샘플링 횟수</span></span><br><span class="line">        self.loss_layer = [SigmoidWithLoss() <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span> (sample_size + <span class="number">1</span>)]</span><br><span class="line">        self.embed_dot_layers = [EmbeddingDot(W) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(sample_size + <span class="number">1</span>)]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.embed_dot_layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, h, target</span>):</span></span><br><span class="line">        batch_size = target.shape[<span class="number">0</span>]</span><br><span class="line">        neg_sample = self.sampler.get_negative_sample(target)</span><br><span class="line">        <span class="comment"># positive</span></span><br><span class="line">        score = self.embed_dot_layers[<span class="number">0</span>].forward(h, target)</span><br><span class="line">        pos_label = np.ones(batch_size).astype(<span class="built_in">int</span>)</span><br><span class="line">        loss = self.loss_layers[<span class="number">0</span>].forward(score, pos_label)</span><br><span class="line">        <span class="comment"># negative</span></span><br><span class="line">        neg_label = np.zeors(batcs_size).astype(<span class="built_in">int</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(self.sample_size):</span><br><span class="line">            neg_target = neg_sample[:, i]</span><br><span class="line">            score = self.embed_dot_layers[i].forward(h, neg_target)</span><br><span class="line">            loss = self.loss_layers[i].forward(score, neg_label)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dh = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> l0, l1 <span class="keyword">in</span> <span class="built_in">zip</span>(self.loss_layers, self.embed_dot_layers):</span><br><span class="line">            dscore = l0.backwawrd(dout)</span><br><span class="line">            dh += l1.backward(dscore)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> dh</span><br></pre></td></tr></table></figure>
+<h2 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h2><ul>
+<li>Embedding, Negative Sampling을 적용하여 개선된 CBOW 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CBOW</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size, window_size, corpus</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer 생성</span></span><br><span class="line">        self.in_layers = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * window_size):</span><br><span class="line">            layer = Embedding(W_in)</span><br><span class="line">            self.in_layers.append(layer)</span><br><span class="line">        self.neg_loss = NegativeSamplingLoss(W_out, corpus, power=<span class="number">0.75</span>, sample_size=<span class="number">5</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer, parameter 정리</span></span><br><span class="line">        layers = self.in_layers + [self.neg_loss]</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산 표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.in_layers):</span><br><span class="line">            h += layer.forward(contexts[:, i])</span><br><span class="line">        h /= <span class="built_in">len</span>(self.in_layers)</span><br><span class="line">        loss = self.neg_loss.forward(h, target)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">            </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.neg_loss.backward(dout)</span><br><span class="line">        dout /= <span class="built_in">len</span>(self.in_layers)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.in_layers:</span><br><span class="line">            layer.backward(dout)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="Skip-gram"><a href="#Skip-gram" class="headerlink" title="Skip-gram"></a>Skip-gram</h2><ul>
+<li>마찬가지로 개선된 Skip-gram 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">SkipGram</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, hidden_size, window_size, corpus</span>):</span></span><br><span class="line">        V, H = vocab_size, hidden_size</span><br><span class="line"></span><br><span class="line">        <span class="comment"># initialize weight</span></span><br><span class="line">        W_in = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        W_out = <span class="number">0.01</span> * np.random.randn(V, H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer 생성</span></span><br><span class="line">        self.in_layer = Embedding(W_in)</span><br><span class="line">        self.loss_layers = []</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">2</span> * window_size):</span><br><span class="line">            layer = NegativeSamplingLoss(W_out, corpus, power=<span class="number">0.75</span>, sample_size=<span class="number">5</span>)</span><br><span class="line">            self.loss_layers.append(layer)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># layer, parameter 정리</span></span><br><span class="line">        layers = [self.in_layer] + self.loss_layers</span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">            </span><br><span class="line">        <span class="comment"># 단어의 분산 표현 저장</span></span><br><span class="line">        self.word_vecs = W_in</span><br><span class="line">          </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, contexts, target</span>):</span></span><br><span class="line">        h = self.in_layer.forward(target)</span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.loss_layers):</span><br><span class="line">            loss = layer.forward(h, contexts[:, i])</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dh = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i, layer <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.loss_layers):</span><br><span class="line">            dh += layer.backward(dout)</span><br><span class="line">        self.in_layer.backward(dh)</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="학습"><a href="#학습" class="headerlink" title="학습"></a>학습</h2><h3 id="데이터-준비"><a href="#데이터-준비" class="headerlink" title="데이터 준비"></a>데이터 준비</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># hyperparameter</span></span><br><span class="line">window_size = <span class="number">5</span></span><br><span class="line">hidden_size = <span class="number">100</span></span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line">max_epoch = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># load data</span></span><br><span class="line">corpus, word_to_id, id_to_word = ptb.load_data(<span class="string">&#x27;train&#x27;</span>)</span><br><span class="line">vocab_size = <span class="built_in">len</span>(word_to_id)</span><br><span class="line">contexts, target = create_contexts_target(corpus, window_size)</span><br></pre></td></tr></table></figure>
+<h3 id="CBOW-1"><a href="#CBOW-1" class="headerlink" title="CBOW"></a>CBOW</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model = CBOW(vocab_size, hidden_size, window_size, corpus)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size)</span><br></pre></td></tr></table></figure>
+<h4 id="Loss"><a href="#Loss" class="headerlink" title="Loss"></a>Loss</h4><p><img src="/image/nlp-from-scratch/4-cbow.png" alt="cbow"></p>
+<h4 id="Most-similar-words"><a href="#Most-similar-words" class="headerlink" title="Most similar words"></a>Most similar words</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">you</th>
+<th style="text-align:center">year</th>
+<th style="text-align:center">car</th>
+<th style="text-align:center">toyota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">we (0.7427)</td>
+<td style="text-align:center">month (0.8423)</td>
+<td style="text-align:center">window (0.6211)</td>
+<td style="text-align:center">seita (0.6777)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">i (0.7134)</td>
+<td style="text-align:center">summer (0.7666)</td>
+<td style="text-align:center">luxury (0.5762)</td>
+<td style="text-align:center">honda (0.6548)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">your (0.6172)</td>
+<td style="text-align:center">week (0.7637)</td>
+<td style="text-align:center">cars (0.5723)</td>
+<td style="text-align:center">chevrolet (0.6465)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">someone (0.5820)</td>
+<td style="text-align:center">spring (0.7329)</td>
+<td style="text-align:center">auto (0.5703)</td>
+<td style="text-align:center">mazda (0.6201)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">weird (0.5801)</td>
+<td style="text-align:center">decade (0.6812)</td>
+<td style="text-align:center">merkur (0.5547)</td>
+<td style="text-align:center">nissan (0.6118)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="Analogy"><a href="#Analogy" class="headerlink" title="Analogy"></a>Analogy</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">king:man = queen:?</th>
+<th style="text-align:center">take:took = go:?</th>
+<th style="text-align:center">car:cars = child:?</th>
+<th style="text-align:center">good:better = bad:?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">woman (5.3945)</td>
+<td style="text-align:center">‘re (4.7070)</td>
+<td style="text-align:center">a.m (6.7891)</td>
+<td style="text-align:center">rather (5.5977)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">lady (4.5469)</td>
+<td style="text-align:center">were (4.1641)</td>
+<td style="text-align:center">rape (5.6953)</td>
+<td style="text-align:center">more (5.4531)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">kid (4.3555)</td>
+<td style="text-align:center">eurodollars (4.1094)</td>
+<td style="text-align:center">daffynition (5.3945)</td>
+<td style="text-align:center">less (5.2461)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">recital (4.3125)</td>
+<td style="text-align:center">are (3.9766)</td>
+<td style="text-align:center">children: (5.2969)</td>
+<td style="text-align:center">greater (4.2148)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">father (4.2617)</td>
+<td style="text-align:center">came (3.9668)</td>
+<td style="text-align:center">women (4.9609)</td>
+<td style="text-align:center">faster (3.8555)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="Skip-gram-1"><a href="#Skip-gram-1" class="headerlink" title="Skip-gram"></a>Skip-gram</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">model = SkipGram(vocab_size, hidden_size, window_size, corpus)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br><span class="line">trainer.fit(contexts, target, max_epoch, batch_size)</span><br></pre></td></tr></table></figure>
+<h4 id="Loss-1"><a href="#Loss-1" class="headerlink" title="Loss"></a>Loss</h4><p><img src="/image/nlp-from-scratch/4-skipgram.png" alt="cbow"></p>
+<h4 id="Most-similar-words-1"><a href="#Most-similar-words-1" class="headerlink" title="Most similar words"></a>Most similar words</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">you</th>
+<th style="text-align:center">year</th>
+<th style="text-align:center">car</th>
+<th style="text-align:center">toyota</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">yourself (0.6670)</td>
+<td style="text-align:center">month (0.6309)</td>
+<td style="text-align:center">cars (0.5928)</td>
+<td style="text-align:center">motor (0.7236)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">your (0.6660)</td>
+<td style="text-align:center">week (0.6084)</td>
+<td style="text-align:center">auto (0.5693)</td>
+<td style="text-align:center">honda (0.6719)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">weird (0.6567)</td>
+<td style="text-align:center">earlier (0.5762)</td>
+<td style="text-align:center">luxury (0.5635)</td>
+<td style="text-align:center">lexus (0.6675)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">i (0.6494)</td>
+<td style="text-align:center">quarter (0.5537)</td>
+<td style="text-align:center">chevrolet (0.5552)</td>
+<td style="text-align:center">infiniti (0.6396)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">ask (0.6152)</td>
+<td style="text-align:center">decade (0.5269)</td>
+<td style="text-align:center">truck (0.5454)</td>
+<td style="text-align:center">minivans (0.5870)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="Analogy-1"><a href="#Analogy-1" class="headerlink" title="Analogy"></a>Analogy</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th style="text-align:center"></th>
+<th style="text-align:center">king:man =  queen:?</th>
+<th style="text-align:center">take:took =  go:?</th>
+<th style="text-align:center">car:cars =  child:?</th>
+<th style="text-align:center">good:better  = bad:?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">teacher (1.8574)</td>
+<td style="text-align:center">yards (1.8213)</td>
+<td style="text-align:center">rape (2.3008)</td>
+<td style="text-align:center">worse (1.7891)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">discarded (1.7959)</td>
+<td style="text-align:center">ran (1.6133)</td>
+<td style="text-align:center">children (1.9131)</td>
+<td style="text-align:center">gyrations (1.6816)</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">hero (1.7451)</td>
+<td style="text-align:center">amsterdam (1.4795)</td>
+<td style="text-align:center">patients (1.8662)</td>
+<td style="text-align:center">rough (1.6816)</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">kasparov (1.7334)</td>
+<td style="text-align:center">crowded (1.4561)</td>
+<td style="text-align:center">versions (1.8359)</td>
+<td style="text-align:center">ever (1.5303)</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">murdered (1.7236)</td>
+<td style="text-align:center">marched (1.4512)</td>
+<td style="text-align:center">non-violent (1.7989)</td>
+<td style="text-align:center">clobbered (1.5166)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/from-scratch/" rel="tag"># from-scratch</a>
+              <a href="/tags/nlp/" rel="tag"># nlp</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/18/Ch03%20word2vec/" rel="prev" title="Ch 03. Word2vec">
+      <i class="fa fa-chevron-left"></i> Ch 03. Word2vec
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Simple-CBOW%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.</span> <span class="nav-text">Simple CBOW의 문제점</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Embedding-layer"><span class="nav-number">2.</span> <span class="nav-text">Embedding layer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multi-class-gt-binary"><span class="nav-number">3.</span> <span class="nav-text">Multi-class -&gt; binary</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EC%A0%84%EC%B2%B4-%EA%B3%BC%EC%A0%95"><span class="nav-number">3.1.</span> <span class="nav-text">전체 과정</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Negative-sampling"><span class="nav-number">4.</span> <span class="nav-text">Negative sampling</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sampling"><span class="nav-number">4.1.</span> <span class="nav-text">Sampling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Negative-Sampling-%EA%B5%AC%ED%98%84"><span class="nav-number">4.2.</span> <span class="nav-text">Negative Sampling 구현</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CBOW"><span class="nav-number">5.</span> <span class="nav-text">CBOW</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Skip-gram"><span class="nav-number">6.</span> <span class="nav-text">Skip-gram</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%95%99%EC%8A%B5"><span class="nav-number">7.</span> <span class="nav-text">학습</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A4%80%EB%B9%84"><span class="nav-number">7.1.</span> <span class="nav-text">데이터 준비</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CBOW-1"><span class="nav-number">7.2.</span> <span class="nav-text">CBOW</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Loss"><span class="nav-number">7.2.1.</span> <span class="nav-text">Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Most-similar-words"><span class="nav-number">7.2.2.</span> <span class="nav-text">Most similar words</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Analogy"><span class="nav-number">7.2.3.</span> <span class="nav-text">Analogy</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Skip-gram-1"><span class="nav-number">7.3.</span> <span class="nav-text">Skip-gram</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Loss-1"><span class="nav-number">7.3.1.</span> <span class="nav-text">Loss</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Most-similar-words-1"><span class="nav-number">7.3.2.</span> <span class="nav-text">Most similar words</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Analogy-1"><span class="nav-number">7.3.3.</span> <span class="nav-text">Analogy</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dongyoung Kim</p>
+  <div class="site-description" itemprop="description">Mathematics, Python, ML, Data</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dongyoung0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dongyoung0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wmkimdy@gmail.com" title="E-Mail → mailto:wmkimdy@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dongyoung Kim</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
