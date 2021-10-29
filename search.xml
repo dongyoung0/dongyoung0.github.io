@@ -817,9 +817,9 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
       </tags>
   </entry>
   <entry>
-    <title></title>
+    <title>Introduction to Recommender Systems 1</title>
     <url>/2021/10/27/recomm/Preferences%20and%20Ratings/</url>
-    <content><![CDATA[<h1 id="Introduction-to-Recommender-Systems-1"><a href="#Introduction-to-Recommender-Systems-1" class="headerlink" title="Introduction to Recommender Systems 1"></a>Introduction to Recommender Systems 1</h1><h2 id="Preferences-and-Ratings"><a href="#Preferences-and-Ratings" class="headerlink" title="Preferences and Ratings"></a>Preferences and Ratings</h2><h3 id="Preference-model"><a href="#Preference-model" class="headerlink" title="Preference model"></a>Preference model</h3><ul>
+    <content><![CDATA[<h2 id="Preferences-and-Ratings"><a href="#Preferences-and-Ratings" class="headerlink" title="Preferences and Ratings"></a>Preferences and Ratings</h2><h3 id="Preference-model"><a href="#Preference-model" class="headerlink" title="Preference model"></a>Preference model</h3><ul>
 <li>추천을 하기 위해서는 유저가 어떤 것을 좋아하는지, 연관성이 있는 데이터는 어떤 것들인지 등에 대한 데이터가 필요함.<ul>
 <li>What users tell us (ratings)</li>
 <li>What users do (actions)</li>
@@ -970,5 +970,13 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
 <li>Hybrids of various techniques</li>
 </ul>
 ]]></content>
+      <categories>
+        <category>추천시스템</category>
+        <category>Coursera</category>
+      </categories>
+      <tags>
+        <tag>추천시스템</tag>
+        <tag>coursera</tag>
+      </tags>
   </entry>
 </search>
