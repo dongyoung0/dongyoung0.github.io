@@ -20,21 +20,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="단어의 의미 자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함  단어의 의미를 표현하는 기법들 시소러스를 활용한 기법(WordNet) 통계 기반 기법(corpus) 추론 기반 기법(word2vec)  시소러스(thesaurus) WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작">
+  <meta name="description" content="Closing Quiz: Introducing Recommender Systems총점 10점 1.  A user views the first 13 seconds of a 5 minute video on YouTube, then browses away. What kind of recommendation input is this?  A recommendatio">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ch 02. 단어의 분산 표현">
-<meta property="og:url" content="http://example.com/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/index.html">
+<meta property="og:title" content="Introduction to Recommender Systems quiz">
+<meta property="og:url" content="http://example.com/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/index.html">
 <meta property="og:site_name" content="Blog">
-<meta property="og:description" content="단어의 의미 자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함  단어의 의미를 표현하는 기법들 시소러스를 활용한 기법(WordNet) 통계 기반 기법(corpus) 추론 기반 기법(word2vec)  시소러스(thesaurus) WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작">
+<meta property="og:description" content="Closing Quiz: Introducing Recommender Systems총점 10점 1.  A user views the first 13 seconds of a 5 minute video on YouTube, then browses away. What kind of recommendation input is this?  A recommendatio">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2021-10-15T15:00:00.000Z">
-<meta property="article:modified_time" content="2021-10-24T12:16:13.310Z">
+<meta property="article:published_time" content="2021-10-26T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-02T02:13:17.213Z">
 <meta property="article:author" content="Dongyoung Kim">
-<meta property="article:tag" content="NLP">
-<meta property="article:tag" content="from-scratch">
+<meta property="article:tag" content="추천시스템">
+<meta property="article:tag" content="coursera">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
+<link rel="canonical" href="http://example.com/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/">
 
 
 <script id="page-configurations">
@@ -47,7 +47,7 @@
   };
 </script>
 
-  <title>Ch 02. 단어의 분산 표현 | Blog</title>
+  <title>Introduction to Recommender Systems quiz | Blog</title>
   
 
 
@@ -123,17 +123,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">5</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -191,7 +191,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -204,7 +204,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ch 02. 단어의 분산 표현<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+          Introduction to Recommender Systems quiz<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
         </h1>
 
         <div class="post-meta">
@@ -214,14 +214,14 @@
               </span>
               <span class="post-meta-item-text">Posted on</span>
 
-              <time title="Created: 2021-10-16 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-16T00:00:00+09:00">2021-10-16</time>
+              <time title="Created: 2021-10-27 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-27T00:00:00+09:00">2021-10-27</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-24 21:16:13" itemprop="dateModified" datetime="2021-10-24T21:16:13+09:00">2021-10-24</time>
+                <time title="Modified: 2021-11-02 11:13:17" itemprop="dateModified" datetime="2021-11-02T11:13:17+09:00">2021-11-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -229,7 +229,7 @@
               </span>
               <span class="post-meta-item-text">In</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" itemprop="url" rel="index"><span itemprop="name">추천시스템</span></a>
                 </span>
             </span>
 
@@ -244,34 +244,85 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="단어의-의미"><a href="#단어의-의미" class="headerlink" title="단어의 의미"></a>단어의 의미</h2><ul>
-<li>자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함</li>
-</ul>
-<h3 id="단어의-의미를-표현하는-기법들"><a href="#단어의-의미를-표현하는-기법들" class="headerlink" title="단어의 의미를 표현하는 기법들"></a>단어의 의미를 표현하는 기법들</h3><ul>
-<li>시소러스를 활용한 기법(WordNet)</li>
-<li>통계 기반 기법(corpus)</li>
-<li>추론 기반 기법(word2vec)</li>
-</ul>
-<h2 id="시소러스-thesaurus"><a href="#시소러스-thesaurus" class="headerlink" title="시소러스(thesaurus)"></a>시소러스(thesaurus)</h2><ul>
-<li>WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작업을 할 수 있음</li>
-<li>그러나 시소러스 기반 기법은 비용 문제나 새로운 단어에 대응이 어렵다는 문제가 있음</li>
-</ul>
-<h2 id="통계-기반-기법-Corpus"><a href="#통계-기반-기법-Corpus" class="headerlink" title="통계 기반 기법 - Corpus"></a>통계 기반 기법 - Corpus</h2><ul>
-<li>그 결과 현재는 말뭉치(corpus)를 이용해 vectorization하는 방법을 주로 사용</li>
-<li>분포 가설(distributional hypothesis) : ‘단어의 의미는 주변 단어에 의해 형성된다’는 가설</li>
-</ul>
-<h3 id="동시발생-행렬-co-occurence-matrix"><a href="#동시발생-행렬-co-occurence-matrix" class="headerlink" title="동시발생 행렬(co-occurence matrix)"></a>동시발생 행렬(co-occurence matrix)</h3><ul>
-<li>각 말뭉치 안의 각 단어에 대해 주변 단어의 빈도를 집계</li>
-<li>Cosine similarity로 단어 벡터간 유사도 계산</li>
-</ul>
-<h3 id="PPMI-Positive-Pointwise-Mutual-Information"><a href="#PPMI-Positive-Pointwise-Mutual-Information" class="headerlink" title="PPMI(Positive Pointwise Mutual Information)"></a>PPMI(Positive Pointwise Mutual Information)</h3><ul>
-<li>PPMI : ‘a’, ‘the’ 처럼 단어와 관련성이 적지만 동시에 자주 발생하는 경우를 고려<ul>
-<li>PPMI의 경우 차원수가 corpus의 어휘 수와 같으므로 차원수가 너무 커지는 문제가 있음</li>
-<li>SVD를 통해 차원축소</li>
-</ul>
+        <h2 id="Closing-Quiz-Introducing-Recommender-Systems"><a href="#Closing-Quiz-Introducing-Recommender-Systems" class="headerlink" title="Closing Quiz: Introducing Recommender Systems"></a>Closing Quiz: Introducing Recommender Systems</h2><p><strong>총점 10점</strong></p>
+<p><strong>1.  A user views the first 13 seconds of a 5 minute video on YouTube, then browses away. What kind of recommendation input is this?</strong></p>
+<ol>
+<li><p>A recommendation</p>
 </li>
-<li>PTB dataset을 통해 테스트</li>
-</ul>
+<li><p>Indication that the user likes the video</p>
+</li>
+<li><p>A rating</p>
+</li>
+<li><p>Implicit input</p>
+</li>
+</ol>
+<p><strong>2. All of these statements about information filtering and information retrieval are true EXCEPT ONE.  Which one is NOT TRUE?</strong></p>
+<ol>
+<li><p>Information filtering focuses on building profiles of long-term user interest while information retrieval focuses on building indexes of content.</p>
+</li>
+<li><p>Information filtering evaluates new content items for match against user profiles.</p>
+</li>
+<li><p>Information filtering involves matching a user-entered query to document terms or item attributes.</p>
+</li>
+<li><p>Information retrieval often uses the TFIDF approach where terms are more relevant if they occur in few documents, but frequently in the matched document.</p>
+</li>
+</ol>
+<p><strong>3. In our taxonomy of recommender systems, what do we mean by “ephemeral personalization?”</strong></p>
+<p><strong>1점</strong></p>
+<p>Ephemeral personalization is based on the products preferred by people like you — your neighborhood of users.</p>
+<p>Ephemeral personalization is based on demographics or similar characteristics rather than on actions or purchases.</p>
+<p>Ephemeral personalization is based on your current navigation or market basket, but not a long-term profile of your preferences.</p>
+<p> Ephemeral personalization means that you may get different recommendations the next time you log in.</p>
+<h3 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h3><p>질문 4</p>
+<p><strong>Amazon.com has many recommender systems.  Which of the following techniques did we NOT see in our tour of Amazon.com?</strong></p>
+<p><strong>1점</strong></p>
+<p>Recommenders based on demographics such as age and zip code</p>
+<p>Recommenders based on your recent shopping history</p>
+<p>Product association recommenders based on the page currently viewed</p>
+<p>Recommenders based on a long-term profile of purchases and ratings</p>
+<h3 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h3><p>질문 5</p>
+<p><strong>Which of the following types of users have been the source of data for making recommendations in recommender systems?</strong></p>
+<p><strong>1점</strong></p>
+<p>People with similar tastes to the target user.</p>
+<p>All system users who have expressed opinions.</p>
+<p>Experts whose opinions were solicited for the site.</p>
+<p>All of the above, sometimes in different systems, sometimes in the same system</p>
+<h3 id="6"><a href="#6" class="headerlink" title="6."></a>6.</h3><p>질문 6</p>
+<p><strong>Which of the following statements best distinguished predictions from recommendations?</strong></p>
+<p><strong>1점</strong></p>
+<p>Predictions are estimates of the rating a user would assign; recommendations are lists of candidate items for the user to consider.</p>
+<p>Predictions are about future preferences, recommendations are expressions of past preference.</p>
+<p>Predictions are computed using content and summary statistics; recommendations use data from other users.</p>
+<p>Predictions are yes/no estimates of whether the user will purchase or consume an item; recommendations include information on whether a user will like the item.</p>
+<h3 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h3><p>질문 7</p>
+<p><strong>When were automated recommender systems first developed and deployed?</strong></p>
+<p><strong>1점</strong></p>
+<p>The 1970’s</p>
+<p>The late 1980’s</p>
+<p>The mid-1990’s</p>
+<p>The early 2000’s</p>
+<h3 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h3><p>질문 8</p>
+<p><strong>Netflix has had a special role in promoting recommender systems.  What is that role?</strong></p>
+<p><strong>1점</strong></p>
+<p>They were the first company to use recommender systems.</p>
+<p>They created this course on recommender systems.</p>
+<p>They sponsored a competition with a million-dollar prize to improve recommender systems.</p>
+<p>They were the first people to show that collaborative filtering recommender systems actually work.</p>
+<h3 id="9"><a href="#9" class="headerlink" title="9."></a>9.</h3><p>질문 9</p>
+<p><strong>Tripadvisor displays star-values for the hotels, restaurants, and other items it covers.  What type of recommender does Tripadvsior use?</strong></p>
+<p><strong>1점</strong></p>
+<p>Non-personal summary statistics</p>
+<p>Content-based filtering</p>
+<p>Collaborative filtering</p>
+<p>None of the above</p>
+<h3 id="10"><a href="#10" class="headerlink" title="10."></a>10.</h3><p>질문 10</p>
+<p><strong>What types of recommender system interface does MovieLens provide?</strong></p>
+<p><strong>1점</strong></p>
+<p>It provides a list of recommendations with predictions and an opportunity to rate the movies.  </p>
+<p>It provides predictions and an opportunity to input ratings, but does not make recommendations.</p>
+<p>It provides an opportunity to rate movies and make lists, but does not offer recommendations or ratings.</p>
+<p>It provides recommendations and content attributes, but not predictions.</p>
+<p><strong>Coursera 명예 규율</strong> <a target="_blank" rel="noopener" href="https://learner.coursera.help/hc/articles/209818863">자세히 알아보기</a></p>
 
     </div>
 
@@ -281,8 +332,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/NLP/" rel="tag"># NLP</a>
-              <a href="/tags/from-scratch/" rel="tag"># from-scratch</a>
+              <a href="/tags/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" rel="tag"># 추천시스템</a>
+              <a href="/tags/coursera/" rel="tag"># coursera</a>
           </div>
 
         
@@ -291,12 +342,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/09/25/sql/%EB%B9%85%EB%B6%84%EA%B8%B0-1-1-2%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/" rel="prev" title="빅분기 1-1-2 Database">
-      <i class="fa fa-chevron-left"></i> 빅분기 1-1-2 Database
+    <a href="/2021/10/27/recomm/Introduction-to-Recommender-Systems-1/" rel="prev" title="Introduction to Recommender Systems - 1">
+      <i class="fa fa-chevron-left"></i> Introduction to Recommender Systems - 1
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/10/18/Ch03%20word2vec/" rel="next" title="Ch 03. Word2vec">
-      Ch 03. Word2vec <i class="fa fa-chevron-right"></i>
+    <a href="/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/" rel="next" title="Introduction to Recommender Systems 2">
+      Introduction to Recommender Systems 2 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -356,7 +407,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%8B%A8%EC%96%B4%EC%9D%98-%EC%9D%98%EB%AF%B8"><span class="nav-number">1.</span> <span class="nav-text">단어의 의미</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8B%A8%EC%96%B4%EC%9D%98-%EC%9D%98%EB%AF%B8%EB%A5%BC-%ED%91%9C%ED%98%84%ED%95%98%EB%8A%94-%EA%B8%B0%EB%B2%95%EB%93%A4"><span class="nav-number">1.1.</span> <span class="nav-text">단어의 의미를 표현하는 기법들</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%8B%9C%EC%86%8C%EB%9F%AC%EC%8A%A4-thesaurus"><span class="nav-number">2.</span> <span class="nav-text">시소러스(thesaurus)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%86%B5%EA%B3%84-%EA%B8%B0%EB%B0%98-%EA%B8%B0%EB%B2%95-Corpus"><span class="nav-number">3.</span> <span class="nav-text">통계 기반 기법 - Corpus</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8F%99%EC%8B%9C%EB%B0%9C%EC%83%9D-%ED%96%89%EB%A0%AC-co-occurence-matrix"><span class="nav-number">3.1.</span> <span class="nav-text">동시발생 행렬(co-occurence matrix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPMI-Positive-Pointwise-Mutual-Information"><span class="nav-number">3.2.</span> <span class="nav-text">PPMI(Positive Pointwise Mutual Information)</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Closing-Quiz-Introducing-Recommender-Systems"><span class="nav-number">1.</span> <span class="nav-text">Closing Quiz: Introducing Recommender Systems</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4"><span class="nav-number">1.1.</span> <span class="nav-text">4.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5"><span class="nav-number">1.2.</span> <span class="nav-text">5.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6"><span class="nav-number">1.3.</span> <span class="nav-text">6.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7"><span class="nav-number">1.4.</span> <span class="nav-text">7.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#8"><span class="nav-number">1.5.</span> <span class="nav-text">8.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#9"><span class="nav-number">1.6.</span> <span class="nav-text">9.</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#10"><span class="nav-number">1.7.</span> <span class="nav-text">10.</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -370,20 +421,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

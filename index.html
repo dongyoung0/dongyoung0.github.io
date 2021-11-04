@@ -119,17 +119,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">5</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -186,7 +186,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/27/recomm/Preferences%20and%20Ratings/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -200,7 +200,182 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/27/recomm/Preferences%20and%20Ratings/" class="post-title-link" itemprop="url">Introduction to Recommender Systems 1</a>
+            <a href="/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/" class="post-title-link" itemprop="url">Introduction to Recommender Systems 2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+09:00">2021-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-03 12:49:48" itemprop="dateModified" datetime="2021-11-03T12:49:48+09:00">2021-11-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" itemprop="url" rel="index"><span itemprop="name">추천시스템</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/coursera/" itemprop="url" rel="index"><span itemprop="name">coursera</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Non-Personalized-and-Stereotype-Based-Recommenders"><a href="#Non-Personalized-and-Stereotype-Based-Recommenders" class="headerlink" title="Non-Personalized and Stereotype-Based Recommenders"></a>Non-Personalized and Stereotype-Based Recommenders</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><h3 id="Why-Non-Personalized"><a href="#Why-Non-Personalized" class="headerlink" title="Why Non-Personalized?"></a>Why Non-Personalized?</h3><ul>
+<li>정보가 별로 없는 새로운 유저들에게 추천해주기 위해</li>
+<li>Simple but beneficial. 계산량이 적지만 좋은 성능을 보임</li>
+<li>온라인 커뮤니티(레딧 등)에서 많이 사용함</li>
+<li>personalization이 불가능한 App &amp; media에서 사용</li>
+</ul>
+<h3 id="Weak-Personalization"><a href="#Weak-Personalization" class="headerlink" title="Weak Personalization"></a>Weak Personalization</h3><p>우리가 유저에 대해 아는 정보가 별로 없을 때</p>
+<ul>
+<li>우편번호나 주소</li>
+<li>나이, 성별, 국적, 종교 등</li>
+</ul>
+<p>을 고려하여 추천</p>
+<ul>
+<li>Demographics</li>
+<li>Stereotypes</li>
+</ul>
+<h2 id="Summary-Statistics"><a href="#Summary-Statistics" class="headerlink" title="Summary Statistics"></a>Summary Statistics</h2><h3 id="Zagat-Guide"><a href="#Zagat-Guide" class="headerlink" title="Zagat Guide"></a>Zagat Guide</h3><p>설문조사를 통해 음식점 점수를 0~30까지 매김 (현재는 5 star(with half)로 대체되었음)</p>
+<p>이 때, 점수의 의미?</p>
+<ul>
+<li>Popularity</li>
+<li>평균 평점</li>
+<li>너가 좋아할 확률</li>
+</ul>
+<p>어떻게 계산할 지?</p>
+<ul>
+<li>빈도</li>
+<li>평균</li>
+<li>좀 더 복잡하게?</li>
+</ul>
+<h4 id="점수-계산-방식"><a href="#점수-계산-방식" class="headerlink" title="점수 계산 방식"></a>점수 계산 방식</h4><ul>
+<li><p>Rating = {0, 1, 2, 3}</p>
+</li>
+<li><p>Score = round(MEAN(ratings)*10)</p>
+</li>
+</ul>
+<p>심플하지만 좋은 성능을 냄</p>
+<h4 id="Popularity"><a href="#Popularity" class="headerlink" title="Popularity?"></a>Popularity?</h4><ul>
+<li><p>Popularity는 좋은 지표가 될 수 있지만, 아닌 경우도 있음</p>
+</li>
+<li><p>평균을 통해 Popularity를 계산하는 것이 항상 좋지는 않음</p>
+<ul>
+<li>유저 평가를 normalize할수도 있음 : 3~5점의 점수를 주는 사람과 1~3점의 점수를 주는 사람</li>
+<li>각 평가자들의 신뢰도를 고려해야 함 </li>
+</ul>
+</li>
+</ul>
+<h4 id="Zagat-Guide의-문제점"><a href="#Zagat-Guide의-문제점" class="headerlink" title="Zagat Guide의 문제점"></a>Zagat Guide의 문제점</h4><ul>
+<li><p>Zagat Guide의 평가가 점점 나빠짐.</p>
+<ul>
+<li>평범한 식당이 좋은 점수를 받거나, 훌륭한 식당이 평범한 점수를 받는 경우가 많음</li>
+<li>Self-selection bias : ‘리뷰를 남기는 사람’ 자체가 일반적인 사람들과는 다른 어떤 특성을 가지고 있을 수 있음(맛있게 먹은 경우만 리뷰를 남긴다던지, 불만사항이 있는 경우에만 리뷰를 남긴다던지)</li>
+<li>Increased diversity of raters : 이용자가 많아질수록 취향이 다른 다양한 평가자들이 늘어남</li>
+</ul>
+</li>
+<li><p>그렇기 때문에 Personalized Recommendation이 필요함</p>
+</li>
+</ul>
+<h3 id="Display"><a href="#Display" class="headerlink" title="Display"></a>Display</h3><h4 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h4><ul>
+<li>To help users decide to buy/read/view the item</li>
+</ul>
+<h4 id="간단한-display-방법들"><a href="#간단한-display-방법들" class="headerlink" title="간단한 display 방법들"></a>간단한 display 방법들</h4><ul>
+<li>Average rating <ul>
+<li>평가를 한 사람이 그 item을 좋아하는지?</li>
+<li>Popularity를 나타내지는 않음</li>
+</ul>
+</li>
+<li>Net upvotes / # of likes<ul>
+<li>Popularity를 나타내지만 각 item의 특징을 나타내지는 못함</li>
+</ul>
+</li>
+<li>% &gt;= 4 stars<ul>
+<li>별점 4점 이상을 받은 비율</li>
+<li>비율이 높을수록 대체로 좋다는 것을 의미</li>
+</ul>
+</li>
+<li>Full distribution<ul>
+<li>전체 분포를 보여주면 사용자 입장에서 이해하기 어려움</li>
+</ul>
+</li>
+</ul>
+<h3 id="Ranking-Items"><a href="#Ranking-Items" class="headerlink" title="Ranking Items"></a>Ranking Items</h3><h4 id="왜-점수로-나타내지-않는지"><a href="#왜-점수로-나타내지-않는지" class="headerlink" title="왜 점수로 나타내지 않는지?"></a>왜 점수로 나타내지 않는지?</h4><ul>
+<li>표본이 적은 경우(단 한개의 5점 리뷰를 받은 가게가 평점이 가장 높음)</li>
+<li>정보가 multivariate일 경우</li>
+<li>Domain이나 business 측면에서 고려할 부분들(평점이 높았으나 오래된 아이템 등)</li>
+</ul>
+<h4 id="고려할-부분들"><a href="#고려할-부분들" class="headerlink" title="고려할 부분들"></a>고려할 부분들</h4><ul>
+<li>Confidence : 신뢰도</li>
+<li>Risk tolerance : 하이리스크 하이리턴?  확실한 item만 추천할 것인지?</li>
+<li>Domain이나 business 측면에서 고려할 부분들 : 고객의 나이대, 시스템의 목적 등</li>
+</ul>
+<h4 id="Damped-means"><a href="#Damped-means" class="headerlink" title="Damped means"></a>Damped means</h4><p>데이터가 적을때 평점이 정확하지 않을 수 있는 점을 고려한 평균</p>
+<script type="math/tex; mode=display">
+{\Sigma_u r_{ui} + k\mu} \over{n+k}</script><ul>
+<li>$r_{ui}$ : $i$번째 사용자의 평점</li>
+<li>$n$ : 평점의 개수</li>
+<li>$k$ : 신뢰구간을 조절</li>
+<li>$\mu$ : 평점의 평균</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/" class="post-title-link" itemprop="url">Introduction to Recommender Systems quiz</a>
         </h2>
 
         <div class="post-meta">
@@ -217,7 +392,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-30 22:20:48" itemprop="dateModified" datetime="2021-10-30T22:20:48+09:00">2021-10-30</time>
+                <time title="Modified: 2021-11-02 11:13:17" itemprop="dateModified" datetime="2021-11-02T11:13:17+09:00">2021-11-02</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -240,7 +415,163 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="Preferences-and-Ratings"><a href="#Preferences-and-Ratings" class="headerlink" title="Preferences and Ratings"></a>Preferences and Ratings</h2><h3 id="Preference-model"><a href="#Preference-model" class="headerlink" title="Preference model"></a>Preference model</h3><ul>
+          <h2 id="Closing-Quiz-Introducing-Recommender-Systems"><a href="#Closing-Quiz-Introducing-Recommender-Systems" class="headerlink" title="Closing Quiz: Introducing Recommender Systems"></a>Closing Quiz: Introducing Recommender Systems</h2><p><strong>총점 10점</strong></p>
+<p><strong>1.  A user views the first 13 seconds of a 5 minute video on YouTube, then browses away. What kind of recommendation input is this?</strong></p>
+<ol>
+<li><p>A recommendation</p>
+</li>
+<li><p>Indication that the user likes the video</p>
+</li>
+<li><p>A rating</p>
+</li>
+<li><p>Implicit input</p>
+</li>
+</ol>
+<p><strong>2. All of these statements about information filtering and information retrieval are true EXCEPT ONE.  Which one is NOT TRUE?</strong></p>
+<ol>
+<li><p>Information filtering focuses on building profiles of long-term user interest while information retrieval focuses on building indexes of content.</p>
+</li>
+<li><p>Information filtering evaluates new content items for match against user profiles.</p>
+</li>
+<li><p>Information filtering involves matching a user-entered query to document terms or item attributes.</p>
+</li>
+<li><p>Information retrieval often uses the TFIDF approach where terms are more relevant if they occur in few documents, but frequently in the matched document.</p>
+</li>
+</ol>
+<p><strong>3. In our taxonomy of recommender systems, what do we mean by “ephemeral personalization?”</strong></p>
+<p><strong>1점</strong></p>
+<p>Ephemeral personalization is based on the products preferred by people like you — your neighborhood of users.</p>
+<p>Ephemeral personalization is based on demographics or similar characteristics rather than on actions or purchases.</p>
+<p>Ephemeral personalization is based on your current navigation or market basket, but not a long-term profile of your preferences.</p>
+<p> Ephemeral personalization means that you may get different recommendations the next time you log in.</p>
+<h3 id="4"><a href="#4" class="headerlink" title="4."></a>4.</h3><p>질문 4</p>
+<p><strong>Amazon.com has many recommender systems.  Which of the following techniques did we NOT see in our tour of Amazon.com?</strong></p>
+<p><strong>1점</strong></p>
+<p>Recommenders based on demographics such as age and zip code</p>
+<p>Recommenders based on your recent shopping history</p>
+<p>Product association recommenders based on the page currently viewed</p>
+<p>Recommenders based on a long-term profile of purchases and ratings</p>
+<h3 id="5"><a href="#5" class="headerlink" title="5."></a>5.</h3><p>질문 5</p>
+<p><strong>Which of the following types of users have been the source of data for making recommendations in recommender systems?</strong></p>
+<p><strong>1점</strong></p>
+<p>People with similar tastes to the target user.</p>
+<p>All system users who have expressed opinions.</p>
+<p>Experts whose opinions were solicited for the site.</p>
+<p>All of the above, sometimes in different systems, sometimes in the same system</p>
+<h3 id="6"><a href="#6" class="headerlink" title="6."></a>6.</h3><p>질문 6</p>
+<p><strong>Which of the following statements best distinguished predictions from recommendations?</strong></p>
+<p><strong>1점</strong></p>
+<p>Predictions are estimates of the rating a user would assign; recommendations are lists of candidate items for the user to consider.</p>
+<p>Predictions are about future preferences, recommendations are expressions of past preference.</p>
+<p>Predictions are computed using content and summary statistics; recommendations use data from other users.</p>
+<p>Predictions are yes/no estimates of whether the user will purchase or consume an item; recommendations include information on whether a user will like the item.</p>
+<h3 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h3><p>질문 7</p>
+<p><strong>When were automated recommender systems first developed and deployed?</strong></p>
+<p><strong>1점</strong></p>
+<p>The 1970’s</p>
+<p>The late 1980’s</p>
+<p>The mid-1990’s</p>
+<p>The early 2000’s</p>
+<h3 id="8"><a href="#8" class="headerlink" title="8."></a>8.</h3><p>질문 8</p>
+<p><strong>Netflix has had a special role in promoting recommender systems.  What is that role?</strong></p>
+<p><strong>1점</strong></p>
+<p>They were the first company to use recommender systems.</p>
+<p>They created this course on recommender systems.</p>
+<p>They sponsored a competition with a million-dollar prize to improve recommender systems.</p>
+<p>They were the first people to show that collaborative filtering recommender systems actually work.</p>
+<h3 id="9"><a href="#9" class="headerlink" title="9."></a>9.</h3><p>질문 9</p>
+<p><strong>Tripadvisor displays star-values for the hotels, restaurants, and other items it covers.  What type of recommender does Tripadvsior use?</strong></p>
+<p><strong>1점</strong></p>
+<p>Non-personal summary statistics</p>
+<p>Content-based filtering</p>
+<p>Collaborative filtering</p>
+<p>None of the above</p>
+<h3 id="10"><a href="#10" class="headerlink" title="10."></a>10.</h3><p>질문 10</p>
+<p><strong>What types of recommender system interface does MovieLens provide?</strong></p>
+<p><strong>1점</strong></p>
+<p>It provides a list of recommendations with predictions and an opportunity to rate the movies.  </p>
+<p>It provides predictions and an opportunity to input ratings, but does not make recommendations.</p>
+<p>It provides an opportunity to rate movies and make lists, but does not offer recommendations or ratings.</p>
+<p>It provides recommendations and content attributes, but not predictions.</p>
+<p><strong>Coursera 명예 규율</strong> <a target="_blank" rel="noopener" href="https://learner.coursera.help/hc/articles/209818863">자세히 알아보기</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/27/recomm/Introduction-to-Recommender-Systems-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/27/recomm/Introduction-to-Recommender-Systems-1/" class="post-title-link" itemprop="url">Introduction to Recommender Systems - 1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-27 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-27T00:00:00+09:00">2021-10-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-02 11:57:31" itemprop="dateModified" datetime="2021-11-02T11:57:31+09:00">2021-11-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" itemprop="url" rel="index"><span itemprop="name">추천시스템</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/coursera/" itemprop="url" rel="index"><span itemprop="name">coursera</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Introducing-Recommender-Systems"><a href="#Introducing-Recommender-Systems" class="headerlink" title="Introducing Recommender Systems"></a>Introducing Recommender Systems</h1><h2 id="Preferences-and-Ratings"><a href="#Preferences-and-Ratings" class="headerlink" title="Preferences and Ratings"></a>Preferences and Ratings</h2><h3 id="Preference-model"><a href="#Preference-model" class="headerlink" title="Preference model"></a>Preference model</h3><ul>
 <li>추천을 하기 위해서는 유저가 어떤 것을 좋아하는지, 연관성이 있는 데이터는 어떤 것들인지 등에 대한 데이터가 필요함.<ul>
 <li>What users tell us (ratings)</li>
 <li>What users do (actions)</li>
@@ -409,7 +740,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/23/ch05_RNN/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/24/nlp/from-scratch/ch06_LSTM/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -423,7 +754,222 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/23/ch05_RNN/" class="post-title-link" itemprop="url">Ch 05. RNN</a>
+            <a href="/2021/10/24/nlp/from-scratch/ch06_LSTM/" class="post-title-link" itemprop="url">Ch 06. LSTM</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-24 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-24T00:00:00+09:00">2021-10-24</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-04 13:17:24" itemprop="dateModified" datetime="2021-11-04T13:17:24+09:00">2021-11-04</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/from-scratch/" itemprop="url" rel="index"><span itemprop="name">from-scratch</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="기존-RNN의-문제점"><a href="#기존-RNN의-문제점" class="headerlink" title="기존 RNN의 문제점"></a>기존 RNN의 문제점</h2><ul>
+<li><p>시계열 데이터에서 멀리 떨어진, 장기(long term) 의존 관계를 잘 학습할 수 없음</p>
+<ul>
+<li><p>BPTT에서 기울기 소실/폭발이 일어나기 때문</p>
+<p><img src="/image/nlp-from-scratch/fig%206-3.png" alt="6-3"></p>
+</li>
+</ul>
+</li>
+<li><p>‘?’에 들어가는 단어는 ‘Tom’<br>RNNLM이 위 질문에 답하기 위해서는 ‘Tom이 방에서 TV를 보고 있음’과 ‘Mary가 방에 들어옴’이라는 두 정보를 모두 기억해야 함.<br><img src="/image/nlp-from-scratch/fig%206-4.png" alt="6-4"><br>위 그림에서 빨간색 화살표를 따라 기울기를 전달하여 학습하는데, 단어간의 거리가 멀어지면(long-term) 결국 기울기가 작아지거나(소실), 커져서(폭발) 장기 의존 관계를 학습할 수 없게 됨.  </p>
+</li>
+<li><p>기울기 소실(vanishing gradient)이 일어나는 이유</p>
+<ul>
+<li>$y = tanh(x)$의 미분은 ${\partial y \over \partial x} = 1 - y^2$으로 역전파 과정에서 기울기가 tanh 노드를 지날때마다 작아짐</li>
+</ul>
+</li>
+<li><p>기울기 폭발(exploding gradients)</p>
+<ul>
+<li>Matrix multiplication을 실행하면서 시간에 따라 </li>
+<li>Wh의 singular value의 최댓값이 1보다 큰 경우 : 기울기가 exponentially 증가</li>
+<li>1보다 작은 경우: 기울기가 exponentially 감소(이 경우 vanishing gradient)<br>[30] ‘On the difficulty of training recurrent neural networks’</li>
+</ul>
+</li>
+</ul>
+<h3 id="gradient-clipping"><a href="#gradient-clipping" class="headerlink" title="gradient clipping"></a>gradient clipping</h3><ul>
+<li><p>기울기 폭발의 해결방법 중 하나.  </p>
+<script type="math/tex; mode=display">
+if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat g</script></li>
+<li><p>기울기 g가 일정 값(threshold) 이상으로 커지면 기울기를 수정해 주는 것.</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">clip_grads</span>(<span class="params">grads, max_norm</span>):</span></span><br><span class="line">    total_norm = <span class="number">0</span></span><br><span class="line">    <span class="comment"># g hat 계산</span></span><br><span class="line">    <span class="keyword">for</span> grad <span class="keyword">in</span> grads:</span><br><span class="line">        total_norm += np.<span class="built_in">sum</span>(grad**<span class="number">2</span>)</span><br><span class="line">    total_norm = np.sqrt(total_norm)</span><br><span class="line"></span><br><span class="line">    rate = max_norm / (total_norm + <span class="number">1e-6</span>)</span><br><span class="line">    <span class="keyword">if</span> rate &lt; <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">for</span> grad <span class="keyword">in</span> grads:</span><br><span class="line">            grad *= rate</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">dW1 = np.random.rand(<span class="number">3</span>, <span class="number">3</span>) * <span class="number">10</span></span><br><span class="line">dW2 = np.random.rand(<span class="number">3</span>, <span class="number">3</span>) * <span class="number">10</span></span><br><span class="line">grads = [dW1, dW2]</span><br><span class="line">max_norm = <span class="number">5.0</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(grads)</span><br><span class="line">clip_grads(grads, max_norm)</span><br><span class="line"><span class="built_in">print</span>(grads)</span><br></pre></td></tr></table></figure>
+<p>기울기가 일정 값(이 경우 5)를 넘어가면 잘 수정해주는 것을 볼 수 있음</p>
+<pre><code>[array([[6.49144048, 2.78487283, 6.76254902],
+       [5.90862817, 0.23981882, 5.58854088],
+       [2.59252447, 4.15101197, 2.83525082]]), array([[6.93137918, 4.40453718, 1.56867738],
+       [5.44649018, 7.80314765, 3.06363532],
+       [2.21957884, 3.87971258, 9.3638365 ]])]
+[array([[1.49503731, 0.64138134, 1.55747605],
+       [1.36081038, 0.05523244, 1.28709139],
+       [0.59708178, 0.95601551, 0.65298384]]), array([[1.59635916, 1.01440465, 0.36128056],
+       [1.25437583, 1.79713531, 0.70558286],
+       [0.51118903, 0.89353281, 2.15657603]])]
+</code></pre><h2 id="LSTM"><a href="#LSTM" class="headerlink" title="LSTM"></a>LSTM</h2><p>이제 vanishing gradient를 해결하기 위해서 ‘게이트가 추가된 RNN’을 도입할 것<br>대표적으로 LSTM, GRU가 있고, LSTM을 먼저 다룰 것임  </p>
+<p><img src="/image/nlp-from-scratch/fig%206-15.png" alt="6-15"></p>
+<ul>
+<li>LSTM에는 기존 RNN과 다르게 기억 셀(memory cell) $c$ 라는 경로가 있음  </li>
+<li><p>$c_t$에는 시각 $t$에서의 LSTM의 기억이 저장되어 있음<br>이 $c_t$를 통해 $h_t=tanh(c_t)$를 계산  </p>
+<h4 id="output-gate의-열림-상태"><a href="#output-gate의-열림-상태" class="headerlink" title="output gate의 열림 상태"></a>output gate의 열림 상태</h4><script type="math/tex; mode=display">
+o = \sigma(x_{t} W_{x}^{(o)} + h_{t-1}W_{h}^{(o)} + b^{(o)})</script><ul>
+<li>$tanh(c_t)$의 원소들에 대해 ‘그것이 다음 시각의 hidden state에 얼마나 중요한가’를 조정  </li>
+</ul>
+</li>
+<li>여기서 $\sigma$(sigmoid)의 출력은 0~1로 데이터를 얼마만큼 통과시킬지를 정하는 비율  </li>
+</ul>
+<h4 id="output-gate"><a href="#output-gate" class="headerlink" title="output gate"></a>output gate</h4><script type="math/tex; mode=display">
+h_{t} = o \circ tanh(c_{t})</script><ul>
+<li>여기서 tanh의 출력은 -1.0~1.0으로 ‘정보’의 강약(정도)를 표시한다고 볼 수 있음  <ul>
+<li>정보를 얼마만큼 통과시킬지 정하는 sigmoid와 다르게 실질적인 ‘정보’를 지니는 데이터에는 tanh를 주로 사용</li>
+</ul>
+</li>
+</ul>
+<h4 id="forget-gate"><a href="#forget-gate" class="headerlink" title="forget gate"></a>forget gate</h4><p><img src="/image/nlp-from-scratch/fig%206-16.png" alt="6-16"></p>
+<ul>
+<li><p>$c_{t-1}$의 기억 중 불필요한 기억을 잊게 해주는 게이트  </p>
+<script type="math/tex; mode=display">
+  f = \sigma(x_{t} W_{x}^{(f)} + h_{t-1}W_{h}^{(f)} + b^{(f)})</script><script type="math/tex; mode=display">
+  c_{t} = f \circ c_{t-1}</script></li>
+<li></li>
+</ul>
+<h4 id="새로운-기억-셀"><a href="#새로운-기억-셀" class="headerlink" title="새로운 기억 셀"></a>새로운 기억 셀</h4><p><img src="/image/nlp-from-scratch/fig%206-17.png" alt="6-17"></p>
+<ul>
+<li><p>새로 기억해야 할 정보를 기억 셀 $c$에 추가    </p>
+<script type="math/tex; mode=display">
+  g = \tanh(x_{t} W_{x}^{(g)} + h_{t-1}W_{h}^{(g)} + b^{(g)})</script></li>
+<li><p>잊어버릴 정보가 아니라 실질적으로 ‘기억’해야할 정보기 때문에 $sigmoid$가 아닌 $tanh$ 사용</p>
+<h4 id="input-gate"><a href="#input-gate" class="headerlink" title="input gate"></a>input gate</h4><p><img src="/image/nlp-from-scratch/fig%206-18.png" alt="6-18">   </p>
+</li>
+<li><p>위의 $g$로 새로 추가되는 정보가 얼마나 가치있는 정보인지 판단하기 위해 input gate로 가중치를 줌</p>
+<script type="math/tex; mode=display">
+  i = \sigma(x_{t} W_{x}^{(i)} + h_{t-1}W_{h}^{(i)} + b^{(i)})</script></li>
+<li><p>이후 $i$와 $g$의 원소별 곱을 기억 셀 $c$에 추가</p>
+</li>
+</ul>
+<h3 id="LSTM의-기울기-흐름"><a href="#LSTM의-기울기-흐름" class="headerlink" title="LSTM의 기울기 흐름"></a>LSTM의 기울기 흐름</h3><ul>
+<li>기억 셀 c의 역전파 흐름을 보면 $+$와 $\times$ 노드를 지남  </li>
+<li>$+$ 노드를 지날때는 기울기 변화가 일어나지 않음</li>
+<li>$\times$ 노드의 경우 matrix multiplication이 아닌 hadamard product(elementwise)를 계산하기 때문에 기울기 소실이 일어나기 어려움</li>
+<li>특히 $\times$ 연산을 제어하는 forget gate가 잊어야할 정보와 잊어서는 안될 정보를 판단해주기 때문에 ‘오래 기억해야 할 정보’의 경우 기울기가 소실 없이 전파될 것을 기대할 수 있음</li>
+</ul>
+<p><img src="/image/nlp-from-scratch/fig%206-19.png" alt="6-19"></p>
+<h2 id="구현"><a href="#구현" class="headerlink" title="구현"></a>구현</h2><ul>
+<li>아래 네가지 게이트에서 일어나는 계산들은 $W$만 다를 뿐 같은 계산을 수행함.(Affine transformation)</li>
+<li>4개의 가중치 $W$를 하나로 모아서 한번의 affine transformation만 수행할것임.<br><img src="/image/nlp-from-scratch/e%206-6.png" alt="6-6"></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTM</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Wx, Wh, b</span>):</span></span><br><span class="line">        self.params = [Wx, Wh, b]</span><br><span class="line">        self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x, h_prev, c_prev</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        N, H = h_prev.shape</span><br><span class="line">        </span><br><span class="line">        A = np.matmul(x, Wx) + np.matmul(h_prev, Wh) + b</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># slice</span></span><br><span class="line">        f = A[:, :H]</span><br><span class="line">        g = A[:, H:<span class="number">2</span>*H]</span><br><span class="line">        i = A[:, <span class="number">2</span>*H:<span class="number">3</span>*H]</span><br><span class="line">        o = A[:, <span class="number">3</span>*H:]</span><br><span class="line">        </span><br><span class="line">        f = sigmoid(f)</span><br><span class="line">        g = np.tanh(g)</span><br><span class="line">        i = sigmoid(i)</span><br><span class="line">        o = sigmoid(o)</span><br><span class="line">        </span><br><span class="line">        c_next = f * c_prev + g * i</span><br><span class="line">        h_next = o * np.tanh(c_next)</span><br><span class="line">        </span><br><span class="line">        self.cache = (x, h_prev, c_prev, i, f, g, o, c_next)</span><br><span class="line">        <span class="keyword">return</span> h_next, c_next</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dh_next, dc_next</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        x, h_prev, c_prev, i, f, g, o, c_next = self.cache</span><br><span class="line">        </span><br><span class="line">        tanh_c_next = np.tanh(c_next)</span><br><span class="line">        <span class="comment"># ?</span></span><br><span class="line">        ds = dc_next + (dh_next * o) * (<span class="number">1</span> - tanh_c_next **<span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        dc_prev = ds * f</span><br><span class="line">        df = ds * c_prev</span><br><span class="line">        dg = ds * i</span><br><span class="line">        di = ds * g</span><br><span class="line">        do = dh_next * tanh_c_next</span><br><span class="line">        </span><br><span class="line">        df *= f * (<span class="number">1</span> - f)</span><br><span class="line">        dg *= (<span class="number">1</span> - g**<span class="number">2</span>)</span><br><span class="line">        di *= i * (<span class="number">1</span> - i)</span><br><span class="line">        do *= o * (<span class="number">1</span> - o)</span><br><span class="line">        </span><br><span class="line">        dA = np.hstack((df, dg, di, do))</span><br><span class="line">        </span><br><span class="line">        dWh = np.dot(h_prev.T, dA)</span><br><span class="line">        dWx = np.dot(x.T, dA)</span><br><span class="line">        db = dA.<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        self.grads[<span class="number">0</span>][...] = dWx</span><br><span class="line">        self.grads[<span class="number">1</span>][...] = dWh</span><br><span class="line">        self.grads[<span class="number">2</span>][...] = db</span><br><span class="line">        </span><br><span class="line">        dx = np.dot(dA, Wx.T)</span><br><span class="line">        dh_prev = np.dot(dA, Wh.T)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dx, dh_prev, dc_prev</span><br></pre></td></tr></table></figure>
+<h3 id="Time-LSTM"><a href="#Time-LSTM" class="headerlink" title="Time LSTM"></a>Time LSTM</h3><ul>
+<li>T개의 시계열 데이터를 한꺼번에 처리하는 T개의 LSTM layer</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimeLSTM</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Wx, Wh, b, stateful=<span class="literal">False</span></span>):</span></span><br><span class="line">        self.params = [Wx, Wh, b]</span><br><span class="line">        self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]</span><br><span class="line">        self.layers = <span class="literal">None</span></span><br><span class="line">        self.h, self.c = <span class="literal">None</span>, <span class="literal">None</span></span><br><span class="line">        self.dh = <span class="literal">None</span></span><br><span class="line">        self.stateful = stateful</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        N, T, D = xs.shape</span><br><span class="line">        H = Wh.shape[<span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        self.layers = []</span><br><span class="line">        hs = np.empty((N, T, H), dtype = <span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.stateful <span class="keyword">or</span> self.h <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.h = np.zeros((N, H), dtype = <span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> self.stateful <span class="keyword">or</span> self.c <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">            self.c = np.zeros((N, H), dtype = <span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">            </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T):</span><br><span class="line">            layer = LSTM(*self.params)</span><br><span class="line">            self.h, self.c = layer.forward(xs[:, t, :], self.h, self.c)</span><br><span class="line">            hs[:, t, :] = self.h</span><br><span class="line">            </span><br><span class="line">            self.layers.append(layer)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> hs</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dhs</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        N, T, H = dhs.shape</span><br><span class="line">        D = Wx.shape[<span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        dxs = np.empty((N, T, D), dtype = <span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        dh, dc = <span class="number">0</span>, <span class="number">0</span></span><br><span class="line">        grads = [<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>]</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">reversed</span>(<span class="built_in">range</span>(T)):</span><br><span class="line">            layer = self.layers[t]</span><br><span class="line">            dx, dh, dc = layer.backward(dhs[:, t, :] + dh, dc)</span><br><span class="line">            dxs[:, t, :] = dx</span><br><span class="line">            <span class="keyword">for</span> i, grad <span class="keyword">in</span> <span class="built_in">enumerate</span>(layer.grads):</span><br><span class="line">                grads[i] += grad</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">for</span> i, grad <span class="keyword">in</span> <span class="built_in">enumerate</span>(grads):</span><br><span class="line">            self.grads[i][...] = grad</span><br><span class="line">        </span><br><span class="line">        self.dh = dh</span><br><span class="line">        <span class="keyword">return</span> dxs</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">set_state</span>(<span class="params">self, h, c=<span class="literal">None</span></span>):</span></span><br><span class="line">        self.h, self.c = h, c</span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.h, self.c = <span class="literal">None</span>, <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h2 id="LSTM을-사용한-RNNLM"><a href="#LSTM을-사용한-RNNLM" class="headerlink" title="LSTM을 사용한 RNNLM"></a>LSTM을 사용한 RNNLM</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Rnnlm</span>(<span class="params">BaseModel</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size=<span class="number">10000</span>, wordvec_size=<span class="number">100</span>, hidden_size=<span class="number">100</span></span>):</span></span><br><span class="line">        V, D, H = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        rn = np.random.randn</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 가중치 초기화</span></span><br><span class="line">        embed_W = (rn(V, D) / <span class="number">100</span>).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx = (rn(D, <span class="number">4</span> * H) / np.sqrt(D)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_W = (rn(H, V) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_b = np.zeros(V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 계층 생성</span></span><br><span class="line">        self.layers = [</span><br><span class="line">            TimeEmbedding(embed_W),</span><br><span class="line">            TimeLSTM(lstm_Wx, lstm_Wh, lstm_b, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeAffine(affine_W, affine_b)</span><br><span class="line">        ]</span><br><span class="line">        self.loss_layer = TimeSoftmaxWithLoss()</span><br><span class="line">        self.lstm_layer = self.layers[<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 모든 가중치와 기울기를 리스트에 모은다.</span></span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, xs</span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            xs = layer.forward(xs)</span><br><span class="line">        <span class="keyword">return</span> xs</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs, ts</span>):</span></span><br><span class="line">        score = self.predict(xs)</span><br><span class="line">        loss = self.loss_layer.forward(score, ts)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.loss_layer.backward(dout)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> <span class="built_in">reversed</span>(self.layers):</span><br><span class="line">            dout = layer.backward(dout)</span><br><span class="line">        <span class="keyword">return</span> dout</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.lstm_layer.reset_state()</span><br></pre></td></tr></table></figure>
+<h3 id="학습"><a href="#학습" class="headerlink" title="학습"></a>학습</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> common.optimizer <span class="keyword">import</span> SGD</span><br><span class="line"><span class="keyword">from</span> common.trainer <span class="keyword">import</span> RnnlmTrainer</span><br><span class="line"><span class="keyword">from</span> common.util <span class="keyword">import</span> eval_perplexity</span><br><span class="line"><span class="keyword">from</span> data <span class="keyword">import</span> ptb</span><br><span class="line"></span><br><span class="line">batch_size = <span class="number">20</span></span><br><span class="line">wordvec_size = <span class="number">100</span></span><br><span class="line">hidden_size = <span class="number">100</span></span><br><span class="line">time_size = <span class="number">35</span></span><br><span class="line">lr = <span class="number">20.0</span></span><br><span class="line">max_epoch = <span class="number">4</span></span><br><span class="line">max_grad = <span class="number">0.25</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># load dataa</span></span><br><span class="line">corpus, word_to_id, id_to_word = ptb.load_data(<span class="string">&#x27;train&#x27;</span>)</span><br><span class="line">corpus_test, _, _ = ptb.load_data(<span class="string">&#x27;test&#x27;</span>)</span><br><span class="line">vocab_size = <span class="built_in">len</span>(word_to_id)</span><br><span class="line">xs = corpus[:-<span class="number">1</span>]</span><br><span class="line">ts = corpus[<span class="number">1</span>:]</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># model 생성</span></span><br><span class="line">model = Rnnlm(vocab_size, wordvec_size, hidden_size)</span><br><span class="line">optimizer = SGD(lr)</span><br><span class="line">trainer = RnnlmTrainer(model, optimizer)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 학습</span></span><br><span class="line">trainer.fit(xs, ts, max_epoch, batch_size, time_size, max_grad, eval_interval = <span class="number">20</span>)</span><br></pre></td></tr></table></figure>
+<pre><code>| current_epoch 1 |  iters 1 / 1327 | time 1.0497894287109375[s] | perplexity 9999.937519272651
+| current_epoch 2 |  iters 1 / 1327 | time 976.033093214035[s] | perplexity 223.09635976041903
+| current_epoch 3 |  iters 1 / 1327 | time 1924.3960175514221[s] | perplexity 162.90021814658576
+| current_epoch 4 |  iters 1 / 1327 | time 2846.238212585449[s] | perplexity 134.39349578293525
+</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(trainer.ppl_list[:<span class="number">10</span>])</span><br></pre></td></tr></table></figure>
+<p><img src="/image/nlp-from-scratch/out%206-1.png" alt="out6-2"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">model.reset_state()</span><br><span class="line">ppl_test = eval_perplexity(model, corpus_test)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;test perplexity&#x27;</span>, ppl_test)</span><br></pre></td></tr></table></figure>
+<pre><code>test perplexity 135.6399667974982
+</code></pre><h2 id="RNNLM-개선"><a href="#RNNLM-개선" class="headerlink" title="RNNLM 개선"></a>RNNLM 개선</h2><ul>
+<li>위의 RNNLM을 크게 3가지 방법을 통해 개선할 예정.<ol>
+<li>LSTM 계층의 다층화</li>
+<li>dropout</li>
+<li>가중치 공유</li>
+</ol>
+</li>
+</ul>
+<h3 id="LSTM-계층의-다층화"><a href="#LSTM-계층의-다층화" class="headerlink" title="LSTM 계층의 다층화"></a>LSTM 계층의 다층화</h3><ul>
+<li>LSTM layer를 여러 겹 쌓아서 모델의 정확도가 향상될 것을 기대.<ul>
+<li>PTB dataset의 언어 모델에서는 보통 2~4층에서 좋은 결과를 얻었음</li>
+</ul>
+</li>
+</ul>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><ul>
+<li>Dropout을 통해 overfitting 방지<ul>
+<li>이떄 시계열 방향으로 dropout을 넣으면 시간의 흐름에 따라 정보가 사라질 수 있음</li>
+<li>대신 layer 깊이 방향으로 dropout을 적용</li>
+</ul>
+</li>
+<li>Variational Dropout : 같은 layer에 속한 dropout들끼리 mask를 공유하여 dropout을 시간 방향으로 적용.<br><img src="/image/nlp-from-scratch/fig%206-34.png" alt="6-34"></li>
+</ul>
+<h3 id="가중치-공유-Weight-tying"><a href="#가중치-공유-Weight-tying" class="headerlink" title="가중치 공유(Weight tying)"></a>가중치 공유(Weight tying)</h3><ul>
+<li>Embedding layer와 Affine layer가 가중치를 공유함으로써 학습해야하는 parameter 수가 크게 줄어들고(계산량 감소 및 overfitting도 방지), 정확도도 향상<br><img src="/image/nlp-from-scratch/fig%206-35.png" alt="6-35"></li>
+</ul>
+<h3 id="구현-1"><a href="#구현-1" class="headerlink" title="구현"></a>구현</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BetterRnnlm</span>(<span class="params">BaseModel</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size=<span class="number">10000</span>, wordvec_size=<span class="number">650</span>, hidden_size=<span class="number">650</span>, dropout_ratio=<span class="number">0.5</span></span>):</span></span><br><span class="line">        V, D, H = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        rn = np.random.randn</span><br><span class="line">        </span><br><span class="line">        embed_W = (rn(V, D)/<span class="number">100</span>).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx1 = (rn(D, <span class="number">4</span> * H) / np.sqrt(D)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh1 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b1 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx2 = (rn(D, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh2 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b2 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_b = np.zeros(V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        self.layers = [</span><br><span class="line">            TimeEmbedding(embed_W),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx1, lstm_Wh1, lstm_b1, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx2, lstm_Wh2, lstm_b2, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeAffine(embed_W.T, affine_b)</span><br><span class="line">        ]</span><br><span class="line">        self.loss_layer = TimeSoftmaxWithLoss()</span><br><span class="line">        self.lstm_layers = [self.layers[<span class="number">2</span>], self.layers[<span class="number">4</span>]]</span><br><span class="line">        self.drop_layers = [self.layers[<span class="number">1</span>], self.layers[<span class="number">3</span>], self.layers[<span class="number">5</span>]]</span><br><span class="line">        </span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, xs, train_flg=<span class="literal">False</span></span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.drop_layers:</span><br><span class="line">            layer.train_fig = train_fig</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            xs = layer.forward(xs)</span><br><span class="line">        <span class="keyword">return</span> xs</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs, ts,  ustrain_flg=<span class="literal">True</span></span>):</span></span><br><span class="line">        score = self.predict(xs, train_flg)</span><br><span class="line">        loss = self.loss_layer.forward(score, ts)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.loss_layer.backward(dout)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> <span class="built_in">reversed</span>(self.layers):</span><br><span class="line">            dout = layer.backward(dout)</span><br><span class="line">        <span class="keyword">return</span> dout</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.lstm_layers:</span><br><span class="line">            layer.reset_state()        </span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/23/nlp/from-scratch/ch05_RNN/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2021/10/23/nlp/from-scratch/ch05_RNN/" class="post-title-link" itemprop="url">Ch 05. RNN</a>
         </h2>
 
         <div class="post-meta">
@@ -610,7 +1156,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/22/ch04%20CBOW/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/22/nlp/from-scratch/ch04%20CBOW/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -624,7 +1170,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/22/ch04%20CBOW/" class="post-title-link" itemprop="url">Ch 04. Word2vec 개선</a>
+            <a href="/2021/10/22/nlp/from-scratch/ch04%20CBOW/" class="post-title-link" itemprop="url">Ch 04. Word2vec 개선</a>
         </h2>
 
         <div class="post-meta">
@@ -961,7 +1507,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/18/Ch03%20word2vec/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/18/nlp/from-scratch/Ch03%20word2vec/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -975,7 +1521,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/18/Ch03%20word2vec/" class="post-title-link" itemprop="url">Ch 03. Word2vec</a>
+            <a href="/2021/10/18/nlp/from-scratch/Ch03%20word2vec/" class="post-title-link" itemprop="url">Ch 03. Word2vec</a>
         </h2>
 
         <div class="post-meta">
@@ -1111,7 +1657,7 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -1125,7 +1671,7 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/" class="post-title-link" itemprop="url">Ch 02. 단어의 분산 표현</a>
+            <a href="/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/" class="post-title-link" itemprop="url">Ch 02. 단어의 분산 표현</a>
         </h2>
 
         <div class="post-meta">
@@ -1526,189 +2072,11 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/30/sql/SQL/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Dongyoung Kim">
-      <meta itemprop="description" content="Mathematics, Python, ML, Data">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/30/sql/SQL/" class="post-title-link" itemprop="url">SQL-01</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-
-              <time title="Created: 2021-08-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-08-30T00:00:00+09:00">2021-08-30</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-10-10 14:52:37" itemprop="dateModified" datetime="2021-10-10T14:52:37+09:00">2021-10-10</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">In</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/SQL/" itemprop="url" rel="index"><span itemprop="name">SQL</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="SQL-1"><a href="#SQL-1" class="headerlink" title="SQL-1"></a>SQL-1</h1><h3 id="DB-Database"><a href="#DB-Database" class="headerlink" title="DB : Database"></a>DB : Database</h3><p>데이터를 통합하여 관리하는 데이터의 집합</p>
-<h3 id="DBMS-Database-Management-System"><a href="#DBMS-Database-Management-System" class="headerlink" title="DBMS(Database Management System)"></a>DBMS(Database Management System)</h3><p>데이터 베이스를 관리하는 시스템</p>
-<h3 id="RDBMS-Relational-Database-Management-System"><a href="#RDBMS-Relational-Database-Management-System" class="headerlink" title="RDBMS : Relational Database Management System"></a>RDBMS : Relational Database Management System</h3><p>Oracle, Mysql, Postgresql, Sqlite</p>
-<p>데이터의 테이블 사이에 키값으로 관계를 가지고 있는 데이터베이스</p>
-<h3 id="NoSQL"><a href="#NoSQL" class="headerlink" title="NoSQL"></a>NoSQL</h3><p>Mongodb, Hbase, Cassandra</p>
-<p>데이터 테이블 사이의 관계가 없이 데이터를 저장하는 DB.</p>
-<p>데이터 사이의 관계가 없으므로 복잡성이 적고 많은 데이터의 저장이 가능.</p>
-<h2 id="MySQL"><a href="#MySQL" class="headerlink" title="MySQL"></a>MySQL</h2><h3 id="특징"><a href="#특징" class="headerlink" title="특징"></a>특징</h3><p>MySQL은 오픈소스이며, 다중사용자와 다중 스레드 지원.</p>
-<p>다양한 운영체제에 다양한 프로그래밍 언어 지원.</p>
-<p>표준 SQL을 사용.</p>
-<p>작고 강력하며 가격이 저렴.</p>
-<p>AWS 우분투 연결</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh -i ~Downloads/ssac.pem ubuntu@ip</span><br></pre></td></tr></table></figure>
-<p>인스턴스 생성 시 받았던 비밀키랑, 퍼블릭 IP 사용</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update -y</span><br><span class="line">sudo apt-get upgrade -y</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y mysql-server mysql-client</span><br><span class="line">sudo mysql</span><br></pre></td></tr></table></figure>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">user</span>,authentication_string,plugin,host <span class="keyword">FROM</span> mysql.user;</span><br><span class="line">##비밀번호를 pwd로 변경(내부 패스워드 로컬)</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;localhost&#x27;</span> IDENTIFIED <span class="keyword">WITH</span> mysql_native_password <span class="keyword">BY</span> <span class="string">&#x27;pwd&#x27;</span>;</span><br><span class="line"></span><br><span class="line">FLUSH PRIVILEGES;</span><br><span class="line">mysql<span class="operator">&gt;</span> <span class="keyword">SELECT</span> <span class="keyword">user</span>,authentication_string,plugin,host <span class="keyword">FROM</span> mysql.user;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ubuntu에서 이렇게 하고 패스워드 쳐서 mysql 접속</span></span><br><span class="line">mysql -u root -p</span><br><span class="line"></span><br><span class="line"><span class="comment">#두번째 패스워드 생성//외부접속 패스워드, 인터넷으로 접속 할 때</span></span><br><span class="line">sudo vi /etc/mysql/mysql.conf.d/mysqld.cnf</span><br><span class="line"></span><br><span class="line"><span class="comment">#vim에서 /bind로 bind 검색 가능, shift-d 하면 </span></span><br><span class="line">커서 뒤 다 삭제</span><br><span class="line">여기서 bind-adress를 127.0.0.1을 0.0.0.0으로 변경</span><br></pre></td></tr></table></figure>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#외부접속 패스워드 생성</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> privileges <span class="keyword">on</span> <span class="operator">*</span>.<span class="operator">*</span> <span class="keyword">to</span> root@<span class="string">&#x27;%&#x27;</span> identified <span class="keyword">by</span> <span class="string">&#x27;pwd&#x27;</span>;</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl restart mysql</span><br></pre></td></tr></table></figure>
-<p>(PC)work bench(wb) → Internet → MySQL(server)</p>
-<p>필요한 것</p>
-<p>public ip, password</p>
-<p>MySQL Workvench에서 MySQL Connection 옆에 + 버튼 누르고</p>
-<p>Setup 에서 Connection Name 작성(SSAC)</p>
-<p>Hostname(public IP), username 입력, PW는 아까 햇던 ssac</p>
-<p>이때 username은 ubuntu가 아니라 root. mySQL 서버에 접속하는거이기 때문.</p>
-<p>FIle → OPen SQL script 해서 데이터 불러오고</p>
-<p>File → new model</p>
-<p>주석</p>
-<p>/<em> ㅇㅇㅇㅇ </em></p>
-<p>— 한줄</p>
-<p>`# &lt;- 얘도 workbench에서 지원해줌</p>
-<p>heidiSQL → 가벼움(윈도우</p>
-<p>Seuqelpro → 맥에서 가볍게 쓸때</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/08/26/Practice-Posting/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Dongyoung Kim">
-      <meta itemprop="description" content="Mathematics, Python, ML, Data">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2021/08/26/Practice-Posting/" class="post-title-link" itemprop="url">Practice Posting</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">Posted on</span>
-              
-
-              <time title="Created: 2021-08-26 17:43:48 / Modified: 18:19:47" itemprop="dateCreated datePublished" datetime="2021-08-26T17:43:48+09:00">2021-08-26</time>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="First-Post"><a href="#First-Post" class="headerlink" title="First Post"></a>First Post</h1><h2 id="Writing-Markdown-with-Git-Bash-is-too-hard"><a href="#Writing-Markdown-with-Git-Bash-is-too-hard" class="headerlink" title="Writing Markdown with Git Bash is too hard."></a>Writing Markdown with Git Bash is too hard.</h2><ul>
-<li>Want to write Markdown in Jupyter Notebook</li>
-<li>주피터 노트북은 바로바로 결과를 볼 수 있어서 쓰기 편한데</li>
-<li>Git Bast에 바로 쓰는건 이게 코드만 보고 잘 적용이 됐는지 안보여서 불편함</li>
-<li><script type="math/tex; mode=display">x+1 = 2</script></li>
-<li><script type="math/tex; mode=display">
-  \sqrt{3x-1}+(1+x)^2</script></li>
-<li><p>$ x+1 = 2y $</p>
-</li>
-</ul>
-<p>  $x+1=2y$</p>
-<script type="math/tex; mode=display">( a^2 )</script><p>이런게 잘 들어가는지<br>Hexo를 통해 문서를 작성하고 나면 <code>hexo clean &amp;&amp; generate</code>를 해준 다음<br><code>hexo deploy</code>로 서버?에 배포?해준다.</p>
-<h2 id="ㅜㅜ"><a href="#ㅜㅜ" class="headerlink" title="ㅜㅜ"></a>ㅜㅜ</h2><ul>
-<li>주피터노트북 상에서 작업하고 거기서 연동해서 바로 블로그에 올릴수는 없을까.</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="Next page"></i></a>
+  </nav>
 
 
 
@@ -1773,20 +2141,20 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
@@ -1882,61 +2250,6 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
   
 
   
-      
-
-<script>
-  if (typeof MathJax === 'undefined') {
-    window.MathJax = {
-      loader: {
-          load: ['[tex]/mhchem'],
-        source: {
-          '[tex]/amsCd': '[tex]/amscd',
-          '[tex]/AMScd': '[tex]/amscd'
-        }
-      },
-      tex: {
-        inlineMath: {'[+]': [['$', '$']]},
-          packages: {'[+]': ['mhchem']},
-        tags: 'ams'
-      },
-      options: {
-        renderActions: {
-          findScript: [10, doc => {
-            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
-              const display = !!node.type.match(/; *mode=display/);
-              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
-              const text = document.createTextNode('');
-              node.parentNode.replaceChild(text, node);
-              math.start = {node: text, delim: '', n: 0};
-              math.end = {node: text, delim: '', n: 0};
-              doc.math.push(math);
-            });
-          }, '', false],
-          insertedScript: [200, () => {
-            document.querySelectorAll('mjx-container').forEach(node => {
-              let target = node.parentNode;
-              if (target.nodeName.toLowerCase() === 'li') {
-                target.parentNode.classList.add('has-jax');
-              }
-            });
-          }, '', false]
-        }
-      }
-    };
-    (function () {
-      var script = document.createElement('script');
-      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
-      script.defer = true;
-      document.head.appendChild(script);
-    })();
-  } else {
-    MathJax.startup.document.state(0);
-    MathJax.texReset();
-    MathJax.typeset();
-  }
-</script>
-
-    
 
   
 

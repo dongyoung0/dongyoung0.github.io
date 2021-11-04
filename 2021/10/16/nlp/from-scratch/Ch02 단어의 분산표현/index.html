@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="단어의 의미 자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함  단어의 의미를 표현하는 기법들 시소러스를 활용한 기법(WordNet) 통계 기반 기법(corpus) 추론 기반 기법(word2vec)  시소러스(thesaurus) WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ch 02. 단어의 분산 표현">
+<meta property="og:url" content="http://example.com/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="단어의 의미 자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함  단어의 의미를 표현하는 기법들 시소러스를 활용한 기법(WordNet) 통계 기반 기법(corpus) 추론 기반 기법(word2vec)  시소러스(thesaurus) WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-10-15T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-10-24T12:16:13.310Z">
+<meta property="article:author" content="Dongyoung Kim">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="from-scratch">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Ch 02. 단어의 분산 표현 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">공부한 내용을 정리하는 장소</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ch 02. 단어의 분산 표현<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-16 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-16T00:00:00+09:00">2021-10-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-10-24 21:16:13" itemprop="dateModified" datetime="2021-10-24T21:16:13+09:00">2021-10-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="단어의-의미"><a href="#단어의-의미" class="headerlink" title="단어의 의미"></a>단어의 의미</h2><ul>
+<li>자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함</li>
+</ul>
+<h3 id="단어의-의미를-표현하는-기법들"><a href="#단어의-의미를-표현하는-기법들" class="headerlink" title="단어의 의미를 표현하는 기법들"></a>단어의 의미를 표현하는 기법들</h3><ul>
+<li>시소러스를 활용한 기법(WordNet)</li>
+<li>통계 기반 기법(corpus)</li>
+<li>추론 기반 기법(word2vec)</li>
+</ul>
+<h2 id="시소러스-thesaurus"><a href="#시소러스-thesaurus" class="headerlink" title="시소러스(thesaurus)"></a>시소러스(thesaurus)</h2><ul>
+<li>WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작업을 할 수 있음</li>
+<li>그러나 시소러스 기반 기법은 비용 문제나 새로운 단어에 대응이 어렵다는 문제가 있음</li>
+</ul>
+<h2 id="통계-기반-기법-Corpus"><a href="#통계-기반-기법-Corpus" class="headerlink" title="통계 기반 기법 - Corpus"></a>통계 기반 기법 - Corpus</h2><ul>
+<li>그 결과 현재는 말뭉치(corpus)를 이용해 vectorization하는 방법을 주로 사용</li>
+<li>분포 가설(distributional hypothesis) : ‘단어의 의미는 주변 단어에 의해 형성된다’는 가설</li>
+</ul>
+<h3 id="동시발생-행렬-co-occurence-matrix"><a href="#동시발생-행렬-co-occurence-matrix" class="headerlink" title="동시발생 행렬(co-occurence matrix)"></a>동시발생 행렬(co-occurence matrix)</h3><ul>
+<li>각 말뭉치 안의 각 단어에 대해 주변 단어의 빈도를 집계</li>
+<li>Cosine similarity로 단어 벡터간 유사도 계산</li>
+</ul>
+<h3 id="PPMI-Positive-Pointwise-Mutual-Information"><a href="#PPMI-Positive-Pointwise-Mutual-Information" class="headerlink" title="PPMI(Positive Pointwise Mutual Information)"></a>PPMI(Positive Pointwise Mutual Information)</h3><ul>
+<li>PPMI : ‘a’, ‘the’ 처럼 단어와 관련성이 적지만 동시에 자주 발생하는 경우를 고려<ul>
+<li>PPMI의 경우 차원수가 corpus의 어휘 수와 같으므로 차원수가 너무 커지는 문제가 있음</li>
+<li>SVD를 통해 차원축소</li>
+</ul>
+</li>
+<li>PTB dataset을 통해 테스트</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/from-scratch/" rel="tag"># from-scratch</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/09/25/sql/%EB%B9%85%EB%B6%84%EA%B8%B0-1-1-2%20%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4/" rel="prev" title="빅분기 1-1-2 Database">
+      <i class="fa fa-chevron-left"></i> 빅분기 1-1-2 Database
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/10/18/nlp/from-scratch/Ch03%20word2vec/" rel="next" title="Ch 03. Word2vec">
+      Ch 03. Word2vec <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%8B%A8%EC%96%B4%EC%9D%98-%EC%9D%98%EB%AF%B8"><span class="nav-number">1.</span> <span class="nav-text">단어의 의미</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8B%A8%EC%96%B4%EC%9D%98-%EC%9D%98%EB%AF%B8%EB%A5%BC-%ED%91%9C%ED%98%84%ED%95%98%EB%8A%94-%EA%B8%B0%EB%B2%95%EB%93%A4"><span class="nav-number">1.1.</span> <span class="nav-text">단어의 의미를 표현하는 기법들</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EC%8B%9C%EC%86%8C%EB%9F%AC%EC%8A%A4-thesaurus"><span class="nav-number">2.</span> <span class="nav-text">시소러스(thesaurus)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%ED%86%B5%EA%B3%84-%EA%B8%B0%EB%B0%98-%EA%B8%B0%EB%B2%95-Corpus"><span class="nav-number">3.</span> <span class="nav-text">통계 기반 기법 - Corpus</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%EB%8F%99%EC%8B%9C%EB%B0%9C%EC%83%9D-%ED%96%89%EB%A0%AC-co-occurence-matrix"><span class="nav-number">3.1.</span> <span class="nav-text">동시발생 행렬(co-occurence matrix)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PPMI-Positive-Pointwise-Mutual-Information"><span class="nav-number">3.2.</span> <span class="nav-text">PPMI(Positive Pointwise Mutual Information)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dongyoung Kim</p>
+  <div class="site-description" itemprop="description">Mathematics, Python, ML, Data</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dongyoung0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dongyoung0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wmkimdy@gmail.com" title="E-Mail → mailto:wmkimdy@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dongyoung Kim</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Non-Personalized and Stereotype-Based RecommendersIntroWhy Non-Personalized? 정보가 별로 없는 새로운 유저들에게 추천해주기 위해 Simple but beneficial. 계산량이 적지만 좋은 성능을 보임 온라인 커뮤니티(레딧 등)에서 많이 사용함 personalization이 불가능한 App &amp;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Introduction to Recommender Systems 2">
+<meta property="og:url" content="http://example.com/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="Non-Personalized and Stereotype-Based RecommendersIntroWhy Non-Personalized? 정보가 별로 없는 새로운 유저들에게 추천해주기 위해 Simple but beneficial. 계산량이 적지만 좋은 성능을 보임 온라인 커뮤니티(레딧 등)에서 많이 사용함 personalization이 불가능한 App &amp;a">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-10-29T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-03T03:49:48.110Z">
+<meta property="article:author" content="Dongyoung Kim">
+<meta property="article:tag" content="추천시스템">
+<meta property="article:tag" content="coursera">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Introduction to Recommender Systems 2 | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">공부한 내용을 정리하는 장소</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Introduction to Recommender Systems 2<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/recomm/Introduction-to-Recommender-Systems-2.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-10-30 00:00:00" itemprop="dateCreated datePublished" datetime="2021-10-30T00:00:00+09:00">2021-10-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-03 12:49:48" itemprop="dateModified" datetime="2021-11-03T12:49:48+09:00">2021-11-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" itemprop="url" rel="index"><span itemprop="name">추천시스템</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/coursera/" itemprop="url" rel="index"><span itemprop="name">coursera</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Non-Personalized-and-Stereotype-Based-Recommenders"><a href="#Non-Personalized-and-Stereotype-Based-Recommenders" class="headerlink" title="Non-Personalized and Stereotype-Based Recommenders"></a>Non-Personalized and Stereotype-Based Recommenders</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><h3 id="Why-Non-Personalized"><a href="#Why-Non-Personalized" class="headerlink" title="Why Non-Personalized?"></a>Why Non-Personalized?</h3><ul>
+<li>정보가 별로 없는 새로운 유저들에게 추천해주기 위해</li>
+<li>Simple but beneficial. 계산량이 적지만 좋은 성능을 보임</li>
+<li>온라인 커뮤니티(레딧 등)에서 많이 사용함</li>
+<li>personalization이 불가능한 App &amp; media에서 사용</li>
+</ul>
+<h3 id="Weak-Personalization"><a href="#Weak-Personalization" class="headerlink" title="Weak Personalization"></a>Weak Personalization</h3><p>우리가 유저에 대해 아는 정보가 별로 없을 때</p>
+<ul>
+<li>우편번호나 주소</li>
+<li>나이, 성별, 국적, 종교 등</li>
+</ul>
+<p>을 고려하여 추천</p>
+<ul>
+<li>Demographics</li>
+<li>Stereotypes</li>
+</ul>
+<h2 id="Summary-Statistics"><a href="#Summary-Statistics" class="headerlink" title="Summary Statistics"></a>Summary Statistics</h2><h3 id="Zagat-Guide"><a href="#Zagat-Guide" class="headerlink" title="Zagat Guide"></a>Zagat Guide</h3><p>설문조사를 통해 음식점 점수를 0~30까지 매김 (현재는 5 star(with half)로 대체되었음)</p>
+<p>이 때, 점수의 의미?</p>
+<ul>
+<li>Popularity</li>
+<li>평균 평점</li>
+<li>너가 좋아할 확률</li>
+</ul>
+<p>어떻게 계산할 지?</p>
+<ul>
+<li>빈도</li>
+<li>평균</li>
+<li>좀 더 복잡하게?</li>
+</ul>
+<h4 id="점수-계산-방식"><a href="#점수-계산-방식" class="headerlink" title="점수 계산 방식"></a>점수 계산 방식</h4><ul>
+<li><p>Rating = {0, 1, 2, 3}</p>
+</li>
+<li><p>Score = round(MEAN(ratings)*10)</p>
+</li>
+</ul>
+<p>심플하지만 좋은 성능을 냄</p>
+<h4 id="Popularity"><a href="#Popularity" class="headerlink" title="Popularity?"></a>Popularity?</h4><ul>
+<li><p>Popularity는 좋은 지표가 될 수 있지만, 아닌 경우도 있음</p>
+</li>
+<li><p>평균을 통해 Popularity를 계산하는 것이 항상 좋지는 않음</p>
+<ul>
+<li>유저 평가를 normalize할수도 있음 : 3~5점의 점수를 주는 사람과 1~3점의 점수를 주는 사람</li>
+<li>각 평가자들의 신뢰도를 고려해야 함 </li>
+</ul>
+</li>
+</ul>
+<h4 id="Zagat-Guide의-문제점"><a href="#Zagat-Guide의-문제점" class="headerlink" title="Zagat Guide의 문제점"></a>Zagat Guide의 문제점</h4><ul>
+<li><p>Zagat Guide의 평가가 점점 나빠짐.</p>
+<ul>
+<li>평범한 식당이 좋은 점수를 받거나, 훌륭한 식당이 평범한 점수를 받는 경우가 많음</li>
+<li>Self-selection bias : ‘리뷰를 남기는 사람’ 자체가 일반적인 사람들과는 다른 어떤 특성을 가지고 있을 수 있음(맛있게 먹은 경우만 리뷰를 남긴다던지, 불만사항이 있는 경우에만 리뷰를 남긴다던지)</li>
+<li>Increased diversity of raters : 이용자가 많아질수록 취향이 다른 다양한 평가자들이 늘어남</li>
+</ul>
+</li>
+<li><p>그렇기 때문에 Personalized Recommendation이 필요함</p>
+</li>
+</ul>
+<h3 id="Display"><a href="#Display" class="headerlink" title="Display"></a>Display</h3><h4 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h4><ul>
+<li>To help users decide to buy/read/view the item</li>
+</ul>
+<h4 id="간단한-display-방법들"><a href="#간단한-display-방법들" class="headerlink" title="간단한 display 방법들"></a>간단한 display 방법들</h4><ul>
+<li>Average rating <ul>
+<li>평가를 한 사람이 그 item을 좋아하는지?</li>
+<li>Popularity를 나타내지는 않음</li>
+</ul>
+</li>
+<li>Net upvotes / # of likes<ul>
+<li>Popularity를 나타내지만 각 item의 특징을 나타내지는 못함</li>
+</ul>
+</li>
+<li>% &gt;= 4 stars<ul>
+<li>별점 4점 이상을 받은 비율</li>
+<li>비율이 높을수록 대체로 좋다는 것을 의미</li>
+</ul>
+</li>
+<li>Full distribution<ul>
+<li>전체 분포를 보여주면 사용자 입장에서 이해하기 어려움</li>
+</ul>
+</li>
+</ul>
+<h3 id="Ranking-Items"><a href="#Ranking-Items" class="headerlink" title="Ranking Items"></a>Ranking Items</h3><h4 id="왜-점수로-나타내지-않는지"><a href="#왜-점수로-나타내지-않는지" class="headerlink" title="왜 점수로 나타내지 않는지?"></a>왜 점수로 나타내지 않는지?</h4><ul>
+<li>표본이 적은 경우(단 한개의 5점 리뷰를 받은 가게가 평점이 가장 높음)</li>
+<li>정보가 multivariate일 경우</li>
+<li>Domain이나 business 측면에서 고려할 부분들(평점이 높았으나 오래된 아이템 등)</li>
+</ul>
+<h4 id="고려할-부분들"><a href="#고려할-부분들" class="headerlink" title="고려할 부분들"></a>고려할 부분들</h4><ul>
+<li>Confidence : 신뢰도</li>
+<li>Risk tolerance : 하이리스크 하이리턴?  확실한 item만 추천할 것인지?</li>
+<li>Domain이나 business 측면에서 고려할 부분들 : 고객의 나이대, 시스템의 목적 등</li>
+</ul>
+<h4 id="Damped-means"><a href="#Damped-means" class="headerlink" title="Damped means"></a>Damped means</h4><p>데이터가 적을때 평점이 정확하지 않을 수 있는 점을 고려한 평균</p>
+<script type="math/tex; mode=display">
+{\Sigma_u r_{ui} + k\mu} \over{n+k}</script><ul>
+<li>$r_{ui}$ : $i$번째 사용자의 평점</li>
+<li>$n$ : 평점의 개수</li>
+<li>$k$ : 신뢰구간을 조절</li>
+<li>$\mu$ : 평점의 평균</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%EC%B6%94%EC%B2%9C%EC%8B%9C%EC%8A%A4%ED%85%9C/" rel="tag"># 추천시스템</a>
+              <a href="/tags/coursera/" rel="tag"># coursera</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/27/recomm/2021-10-27-Introduction-to-Recommender-Systems-quiz/" rel="prev" title="Introduction to Recommender Systems quiz">
+      <i class="fa fa-chevron-left"></i> Introduction to Recommender Systems quiz
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Non-Personalized-and-Stereotype-Based-Recommenders"><span class="nav-number">1.</span> <span class="nav-text">Non-Personalized and Stereotype-Based Recommenders</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Intro"><span class="nav-number">1.1.</span> <span class="nav-text">Intro</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-Non-Personalized"><span class="nav-number">1.1.1.</span> <span class="nav-text">Why Non-Personalized?</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Weak-Personalization"><span class="nav-number">1.1.2.</span> <span class="nav-text">Weak Personalization</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Summary-Statistics"><span class="nav-number">1.2.</span> <span class="nav-text">Summary Statistics</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Zagat-Guide"><span class="nav-number">1.2.1.</span> <span class="nav-text">Zagat Guide</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%A0%90%EC%88%98-%EA%B3%84%EC%82%B0-%EB%B0%A9%EC%8B%9D"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">점수 계산 방식</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Popularity"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">Popularity?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Zagat-Guide%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">Zagat Guide의 문제점</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Display"><span class="nav-number">1.2.2.</span> <span class="nav-text">Display</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EB%AA%A9%EC%A0%81"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">목적</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EA%B0%84%EB%8B%A8%ED%95%9C-display-%EB%B0%A9%EB%B2%95%EB%93%A4"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">간단한 display 방법들</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Ranking-Items"><span class="nav-number">1.2.3.</span> <span class="nav-text">Ranking Items</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%99%9C-%EC%A0%90%EC%88%98%EB%A1%9C-%EB%82%98%ED%83%80%EB%82%B4%EC%A7%80-%EC%95%8A%EB%8A%94%EC%A7%80"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">왜 점수로 나타내지 않는지?</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EA%B3%A0%EB%A0%A4%ED%95%A0-%EB%B6%80%EB%B6%84%EB%93%A4"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">고려할 부분들</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Damped-means"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">Damped means</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dongyoung Kim</p>
+  <div class="site-description" itemprop="description">Mathematics, Python, ML, Data</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dongyoung0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dongyoung0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wmkimdy@gmail.com" title="E-Mail → mailto:wmkimdy@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dongyoung Kim</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

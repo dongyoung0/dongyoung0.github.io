@@ -23,7 +23,7 @@
   <meta name="description" content="추론 기반 기법기존 통계 기반 기법의 문제점 단어의 개수가 $N$개일 때 Co-occurence matrix의 크기는 $N \times N$으로 너무 큼. SVD를 사용하여 차원 축소를 진행하는데, 이때 SVD를 적용하는 비용도 $O(n^3)$으로 너무 큼.  개선 방법 Neural Network처럼 학습 데이터를 미니배치로 나눠서 순차적으로 학습.   C">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ch 03. Word2vec">
-<meta property="og:url" content="http://example.com/2021/10/18/Ch03%20word2vec/index.html">
+<meta property="og:url" content="http://example.com/2021/10/18/nlp/from-scratch/Ch03%20word2vec/index.html">
 <meta property="og:site_name" content="Blog">
 <meta property="og:description" content="추론 기반 기법기존 통계 기반 기법의 문제점 단어의 개수가 $N$개일 때 Co-occurence matrix의 크기는 $N \times N$으로 너무 큼. SVD를 사용하여 차원 축소를 진행하는데, 이때 SVD를 적용하는 비용도 $O(n^3)$으로 너무 큼.  개선 방법 Neural Network처럼 학습 데이터를 미니배치로 나눠서 순차적으로 학습.   C">
 <meta property="og:locale" content="en_US">
@@ -42,7 +42,7 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/image/nlp-from-scratch/fig%203-1.png">
 
-<link rel="canonical" href="http://example.com/2021/10/18/Ch03%20word2vec/">
+<link rel="canonical" href="http://example.com/2021/10/18/nlp/from-scratch/Ch03%20word2vec/">
 
 
 <script id="page-configurations">
@@ -131,17 +131,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">10</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">5</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">9</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">12</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -199,7 +199,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/18/Ch03%20word2vec/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/10/18/nlp/from-scratch/Ch03%20word2vec/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -212,7 +212,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Ch 03. Word2vec<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/Ch03%20word2vec.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+          Ch 03. Word2vec<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/nlp/from-scratch/Ch03%20word2vec.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
         </h1>
 
         <div class="post-meta">
@@ -348,11 +348,11 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2021/10/16/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/" rel="prev" title="Ch 02. 단어의 분산 표현">
+    <a href="/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/" rel="prev" title="Ch 02. 단어의 분산 표현">
       <i class="fa fa-chevron-left"></i> Ch 02. 단어의 분산 표현
     </a></div>
       <div class="post-nav-item">
-    <a href="/2021/10/22/ch04%20CBOW/" rel="next" title="Ch 04. Word2vec 개선">
+    <a href="/2021/10/22/nlp/from-scratch/ch04%20CBOW/" rel="next" title="Ch 04. Word2vec 개선">
       Ch 04. Word2vec 개선 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
@@ -427,20 +427,20 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-count">11</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>
