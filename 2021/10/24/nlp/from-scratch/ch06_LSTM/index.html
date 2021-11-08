@@ -34,12 +34,11 @@
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%206-17.png">
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%206-18.png">
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%206-19.png">
-<meta property="og:image" content="http://example.com/image/nlp-from-scratch/e%206-6.png">
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/out%206-1.png">
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%206-34.png">
 <meta property="og:image" content="http://example.com/image/nlp-from-scratch/fig%206-35.png">
 <meta property="article:published_time" content="2021-10-23T15:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-04T04:20:22.548Z">
+<meta property="article:modified_time" content="2021-11-08T13:43:46.755Z">
 <meta property="article:author" content="Dongyoung Kim">
 <meta property="article:tag" content="nlp">
 <meta property="article:tag" content="LSTM">
@@ -135,17 +134,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">9</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">6</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">4</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">11</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">9</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -233,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2021-11-04 13:20:22" itemprop="dateModified" datetime="2021-11-04T13:20:22+09:00">2021-11-04</time>
+                <time title="Modified: 2021-11-08 22:43:46" itemprop="dateModified" datetime="2021-11-08T22:43:46+09:00">2021-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -285,8 +284,7 @@
 </ul>
 <h3 id="gradient-clipping"><a href="#gradient-clipping" class="headerlink" title="gradient clipping"></a>gradient clipping</h3><ul>
 <li><p>기울기 폭발의 해결방법 중 하나.  </p>
-<script type="math/tex; mode=display">
-if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat g</script></li>
+<script type="math/tex; mode=display">if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat g</script></li>
 <li><p>기울기 g가 일정 값(threshold) 이상으로 커지면 기울기를 수정해 주는 것.</p>
 </li>
 </ul>
@@ -307,40 +305,32 @@ if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat
 <p><img src="/image/nlp-from-scratch/fig%206-15.png" alt="6-15"></p>
 <ul>
 <li>LSTM에는 기존 RNN과 다르게 기억 셀(memory cell) $c$ 라는 경로가 있음  </li>
-<li><p>$c_t$에는 시각 $t$에서의 LSTM의 기억이 저장되어 있음<br>이 $c_t$를 통해 $h_t=tanh(c_t)$를 계산  </p>
-<h4 id="output-gate의-열림-상태"><a href="#output-gate의-열림-상태" class="headerlink" title="output gate의 열림 상태"></a>output gate의 열림 상태</h4><script type="math/tex; mode=display">
-o = \sigma(x_{t} W_{x}^{(o)} + h_{t-1}W_{h}^{(o)} + b^{(o)})</script><ul>
-<li>$tanh(c_t)$의 원소들에 대해 ‘그것이 다음 시각의 hidden state에 얼마나 중요한가’를 조정  </li>
+<li><script type="math/tex">c_t</script> 에는 시각 $t$에서의 LSTM의 기억이 저장되어 있음<br>이 `$c_t$를 통해 $h_t=tanh(c_t)$를 계산  <h4 id="output-gate의-열림-상태"><a href="#output-gate의-열림-상태" class="headerlink" title="output gate의 열림 상태"></a>output gate의 열림 상태</h4></li>
 </ul>
-</li>
+<script type="math/tex; mode=display">o = \sigma(x_{t} W_{x}^{(o)} + h_{t-1}W_{h}^{(o)} + b^{(o)})</script><ul>
+<li>$tanh(c_t)$의 원소들에 대해 ‘그것이 다음 시각의 hidden state에 얼마나 중요한가’를 조정  <ul>
 <li>여기서 $\sigma$(sigmoid)의 출력은 0~1로 데이터를 얼마만큼 통과시킬지를 정하는 비율  </li>
 </ul>
-<h4 id="output-gate"><a href="#output-gate" class="headerlink" title="output gate"></a>output gate</h4><script type="math/tex; mode=display">
-h_{t} = o \circ tanh(c_{t})</script><ul>
-<li>여기서 tanh의 출력은 -1.0~1.0으로 ‘정보’의 강약(정도)를 표시한다고 볼 수 있음  <ul>
-<li>정보를 얼마만큼 통과시킬지 정하는 sigmoid와 다르게 실질적인 ‘정보’를 지니는 데이터에는 tanh를 주로 사용</li>
-</ul>
 </li>
+</ul>
+<h4 id="output-gate"><a href="#output-gate" class="headerlink" title="output gate"></a>output gate</h4><script type="math/tex; mode=display">h_{t} = o \circ tanh(c_{t})</script><p>여기서 tanh의 출력은 -1.0~1.0으로 ‘정보’의 강약(정도)를 표시한다고 볼 수 있음  </p>
+<ul>
+<li>정보를 얼마만큼 통과시킬지 정하는 sigmoid와 다르게 실질적인 ‘정보’를 지니는 데이터에는 tanh를 주로 사용</li>
 </ul>
 <h4 id="forget-gate"><a href="#forget-gate" class="headerlink" title="forget gate"></a>forget gate</h4><p><img src="/image/nlp-from-scratch/fig%206-16.png" alt="6-16"></p>
 <ul>
 <li><p>$c_{t-1}$의 기억 중 불필요한 기억을 잊게 해주는 게이트  </p>
-<script type="math/tex; mode=display">
-  f = \sigma(x_{t} W_{x}^{(f)} + h_{t-1}W_{h}^{(f)} + b^{(f)})</script><script type="math/tex; mode=display">
-  c_{t} = f \circ c_{t-1}</script></li>
-<li></li>
+<script type="math/tex; mode=display">f = \sigma(x_{t} W_{x}^{(f)} + h_{t-1}W_{h}^{(f)} + b^{(f)})</script><script type="math/tex; mode=display">c_{t} = f \circ c_{t-1}</script></li>
 </ul>
 <h4 id="새로운-기억-셀"><a href="#새로운-기억-셀" class="headerlink" title="새로운 기억 셀"></a>새로운 기억 셀</h4><p><img src="/image/nlp-from-scratch/fig%206-17.png" alt="6-17"></p>
 <ul>
 <li><p>새로 기억해야 할 정보를 기억 셀 $c$에 추가    </p>
-<script type="math/tex; mode=display">{$}
-  g = \tanh(x_{t} W_{x}^{(g)} + h_{t-1}W_{h}^{(g)} + b^{(g)})</script></li>
+<script type="math/tex; mode=display">g = \tanh(x_{t} W_{x}^{(g)} + h_{t-1}W_{h}^{(g)} + b^{(g)})</script></li>
 <li><p>잊어버릴 정보가 아니라 실질적으로 ‘기억’해야할 정보기 때문에 $sigmoid$가 아닌 $tanh$ 사용</p>
 <h4 id="input-gate"><a href="#input-gate" class="headerlink" title="input gate"></a>input gate</h4><p><img src="/image/nlp-from-scratch/fig%206-18.png" alt="6-18">   </p>
 </li>
 <li><p>위의 $g$로 새로 추가되는 정보가 얼마나 가치있는 정보인지 판단하기 위해 input gate로 가중치를 줌</p>
-<script type="math/tex; mode=display">
-  i = \sigma(x_{t} W_{x}^{(i)} + h_{t-1}W_{h}^{(i)} + b^{(i)})</script></li>
+<script type="math/tex; mode=display">i = \sigma(x_{t} W_{x}^{(i)} + h_{t-1}W_{h}^{(i)} + b^{(i)})</script></li>
 <li><p>이후 $i$와 $g$의 원소별 곱을 기억 셀 $c$에 추가</p>
 </li>
 </ul>
@@ -353,7 +343,7 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
 <p><img src="/image/nlp-from-scratch/fig%206-19.png" alt="6-19"></p>
 <h2 id="구현"><a href="#구현" class="headerlink" title="구현"></a>구현</h2><ul>
 <li>아래 네가지 게이트에서 일어나는 계산들은 $W$만 다를 뿐 같은 계산을 수행함.(Affine transformation)</li>
-<li>4개의 가중치 $W$를 하나로 모아서 한번의 affine transformation만 수행할것임.<br><img src="/image/nlp-from-scratch/e%206-6.png" alt="6-6"></li>
+<li>4개의 가중치 $W$를 하나로 모아서 한번의 affine transformation만 수행할것임.</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTM</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Wx, Wh, b</span>):</span></span><br><span class="line">        self.params = [Wx, Wh, b]</span><br><span class="line">        self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x, h_prev, c_prev</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        N, H = h_prev.shape</span><br><span class="line">        </span><br><span class="line">        A = np.matmul(x, Wx) + np.matmul(h_prev, Wh) + b</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># slice</span></span><br><span class="line">        f = A[:, :H]</span><br><span class="line">        g = A[:, H:<span class="number">2</span>*H]</span><br><span class="line">        i = A[:, <span class="number">2</span>*H:<span class="number">3</span>*H]</span><br><span class="line">        o = A[:, <span class="number">3</span>*H:]</span><br><span class="line">        </span><br><span class="line">        f = sigmoid(f)</span><br><span class="line">        g = np.tanh(g)</span><br><span class="line">        i = sigmoid(i)</span><br><span class="line">        o = sigmoid(o)</span><br><span class="line">        </span><br><span class="line">        c_next = f * c_prev + g * i</span><br><span class="line">        h_next = o * np.tanh(c_next)</span><br><span class="line">        </span><br><span class="line">        self.cache = (x, h_prev, c_prev, i, f, g, o, c_next)</span><br><span class="line">        <span class="keyword">return</span> h_next, c_next</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dh_next, dc_next</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        x, h_prev, c_prev, i, f, g, o, c_next = self.cache</span><br><span class="line">        </span><br><span class="line">        tanh_c_next = np.tanh(c_next)</span><br><span class="line">        <span class="comment"># ?</span></span><br><span class="line">        ds = dc_next + (dh_next * o) * (<span class="number">1</span> - tanh_c_next **<span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        dc_prev = ds * f</span><br><span class="line">        df = ds * c_prev</span><br><span class="line">        dg = ds * i</span><br><span class="line">        di = ds * g</span><br><span class="line">        do = dh_next * tanh_c_next</span><br><span class="line">        </span><br><span class="line">        df *= f * (<span class="number">1</span> - f)</span><br><span class="line">        dg *= (<span class="number">1</span> - g**<span class="number">2</span>)</span><br><span class="line">        di *= i * (<span class="number">1</span> - i)</span><br><span class="line">        do *= o * (<span class="number">1</span> - o)</span><br><span class="line">        </span><br><span class="line">        dA = np.hstack((df, dg, di, do))</span><br><span class="line">        </span><br><span class="line">        dWh = np.dot(h_prev.T, dA)</span><br><span class="line">        dWx = np.dot(x.T, dA)</span><br><span class="line">        db = dA.<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        self.grads[<span class="number">0</span>][...] = dWx</span><br><span class="line">        self.grads[<span class="number">1</span>][...] = dWh</span><br><span class="line">        self.grads[<span class="number">2</span>][...] = db</span><br><span class="line">        </span><br><span class="line">        dx = np.dot(dA, Wx.T)</span><br><span class="line">        dh_prev = np.dot(dA, Wh.T)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dx, dh_prev, dc_prev</span><br></pre></td></tr></table></figure>
 <h3 id="Time-LSTM"><a href="#Time-LSTM" class="headerlink" title="Time LSTM"></a>Time LSTM</h3><ul>
@@ -398,7 +388,27 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
 <li>Embedding layer와 Affine layer가 가중치를 공유함으로써 학습해야하는 parameter 수가 크게 줄어들고(계산량 감소 및 overfitting도 방지), 정확도도 향상<br><img src="/image/nlp-from-scratch/fig%206-35.png" alt="6-35"></li>
 </ul>
 <h3 id="구현-1"><a href="#구현-1" class="headerlink" title="구현"></a>구현</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BetterRnnlm</span>(<span class="params">BaseModel</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size=<span class="number">10000</span>, wordvec_size=<span class="number">650</span>, hidden_size=<span class="number">650</span>, dropout_ratio=<span class="number">0.5</span></span>):</span></span><br><span class="line">        V, D, H = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        rn = np.random.randn</span><br><span class="line">        </span><br><span class="line">        embed_W = (rn(V, D)/<span class="number">100</span>).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx1 = (rn(D, <span class="number">4</span> * H) / np.sqrt(D)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh1 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b1 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx2 = (rn(D, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh2 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b2 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_b = np.zeros(V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        self.layers = [</span><br><span class="line">            TimeEmbedding(embed_W),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx1, lstm_Wh1, lstm_b1, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx2, lstm_Wh2, lstm_b2, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeAffine(embed_W.T, affine_b)</span><br><span class="line">        ]</span><br><span class="line">        self.loss_layer = TimeSoftmaxWithLoss()</span><br><span class="line">        self.lstm_layers = [self.layers[<span class="number">2</span>], self.layers[<span class="number">4</span>]]</span><br><span class="line">        self.drop_layers = [self.layers[<span class="number">1</span>], self.layers[<span class="number">3</span>], self.layers[<span class="number">5</span>]]</span><br><span class="line">        </span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, xs, train_flg=<span class="literal">False</span></span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.drop_layers:</span><br><span class="line">            layer.train_fig = train_fig</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            xs = layer.forward(xs)</span><br><span class="line">        <span class="keyword">return</span> xs</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs, ts,  ustrain_flg=<span class="literal">True</span></span>):</span></span><br><span class="line">        score = self.predict(xs, train_flg)</span><br><span class="line">        loss = self.loss_layer.forward(score, ts)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.loss_layer.backward(dout)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> <span class="built_in">reversed</span>(self.layers):</span><br><span class="line">            dout = layer.backward(dout)</span><br><span class="line">        <span class="keyword">return</span> dout</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.lstm_layers:</span><br><span class="line">            layer.reset_state()        </span><br></pre></td></tr></table></figure>
-
+<h3 id="학습-1"><a href="#학습-1" class="headerlink" title="학습"></a>학습</h3><p>위 Rnnlm과 같은 조건으로 학습(epoch는 4번에서 40번으로 늘려서)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">model = BetterRnnlm(vocab_size, wordvec_size, hidden_size, dropout)</span><br><span class="line">optimizer = SGD(lr)</span><br><span class="line">trainer = RnnlmTrainer(model, optimizer)</span><br><span class="line"></span><br><span class="line">best_ppl = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(max_epoch):</span><br><span class="line">  trainer.fit(xs, ts, max_epoch=<span class="number">1</span>, batch_size=batch_size, time_size=time_size, max_grad=max_grad)</span><br><span class="line">  model.reset_state()</span><br><span class="line">  ppl = eval_perplexity(model, corpus_val)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&#x27;perplexity : <span class="subst">&#123;ppl&#125;</span>&#x27;</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> best_ppl &gt; ppl:</span><br><span class="line">    best_ppl = ppl</span><br><span class="line">    model.save_params()</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    lr /= <span class="number">4.0</span></span><br><span class="line">    optimizer.lr = lr</span><br><span class="line">  </span><br><span class="line">  model.reset_state()</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span>*<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h4><pre><code>| current_epoch 1 |  iters 1 / 1327 | time 0.4454360008239746[s] | perplexity 10000.160734654946
+test perplexity : 199.91582600396907
+| current_epoch 2 |  iters 1 / 1327 | time 0.42688775062561035[s] | perplexity 285.35975929723134
+test perplexity : 146.85835254402008
+| current_epoch 3 |  iters 1 / 1327 | time 0.401918888092041[s] | perplexity 220.99791134777234
+test perplexity : 125.61738284895596
+| current_epoch 4 |  iters 1 / 1327 | time 0.4348595142364502[s] | perplexity 193.85762995444483
+test perplexity : 112.8790201600887
+| current_epoch 5 |  iters 1 / 1327 | time 0.41679954528808594[s] | perplexity 171.20541935259646
+test perplexity : 105.05696537135755
+| current_epoch 6 |  iters 1 / 1327 | time 0.42535948753356934[s] | perplexity 158.62854755201397
+test perplexity : 100.56030860396797
+| current_epoch 7 |  iters 1 / 1327 | time 0.4258577823638916[s] | perplexity 146.75250942965903
+test perplexity : 96.68474006387768
+| current_epoch 8 |  iters 1 / 1327 | time 0.42501020431518555[s] | perplexity 141.41520295810776
+test perplexity : 94.68295145752191
+...
+</code></pre><h4 id="epoch-40번-진행-후-평가"><a href="#epoch-40번-진행-후-평가" class="headerlink" title="epoch 40번 진행 후 평가"></a>epoch 40번 진행 후 평가</h4><pre><code>test perplexity : 76.2854392816185
+</code></pre>
     </div>
 
     
@@ -420,10 +430,7 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
     <a href="/2021/10/23/nlp/from-scratch/ch05_RNN/" rel="prev" title="Ch 05. RNN">
       <i class="fa fa-chevron-left"></i> Ch 05. RNN
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2021/10/27/recomm/Introduction-to-Recommender-Systems-1/" rel="next" title="Introduction to Recommender Systems - 1">
-      Introduction to Recommender Systems - 1 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -482,7 +489,7 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B8%B0%EC%A1%B4-RNN%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.</span> <span class="nav-text">기존 RNN의 문제점</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gradient-clipping"><span class="nav-number">1.1.</span> <span class="nav-text">gradient clipping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM"><span class="nav-number">2.</span> <span class="nav-text">LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#output-gate%EC%9D%98-%EC%97%B4%EB%A6%BC-%EC%83%81%ED%83%9C"><span class="nav-number">2.0.1.</span> <span class="nav-text">output gate의 열림 상태</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#output-gate"><span class="nav-number">2.0.2.</span> <span class="nav-text">output gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#forget-gate"><span class="nav-number">2.0.3.</span> <span class="nav-text">forget gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%83%88%EB%A1%9C%EC%9A%B4-%EA%B8%B0%EC%96%B5-%EC%85%80"><span class="nav-number">2.0.4.</span> <span class="nav-text">새로운 기억 셀</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#input-gate"><span class="nav-number">2.0.5.</span> <span class="nav-text">input gate</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM%EC%9D%98-%EA%B8%B0%EC%9A%B8%EA%B8%B0-%ED%9D%90%EB%A6%84"><span class="nav-number">2.1.</span> <span class="nav-text">LSTM의 기울기 흐름</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B5%AC%ED%98%84"><span class="nav-number">3.</span> <span class="nav-text">구현</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-LSTM"><span class="nav-number">3.1.</span> <span class="nav-text">Time LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-RNNLM"><span class="nav-number">4.</span> <span class="nav-text">LSTM을 사용한 RNNLM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%99%EC%8A%B5"><span class="nav-number">4.1.</span> <span class="nav-text">학습</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RNNLM-%EA%B0%9C%EC%84%A0"><span class="nav-number">5.</span> <span class="nav-text">RNNLM 개선</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM-%EA%B3%84%EC%B8%B5%EC%9D%98-%EB%8B%A4%EC%B8%B5%ED%99%94"><span class="nav-number">5.1.</span> <span class="nav-text">LSTM 계층의 다층화</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">5.2.</span> <span class="nav-text">Dropout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B0%80%EC%A4%91%EC%B9%98-%EA%B3%B5%EC%9C%A0-Weight-tying"><span class="nav-number">5.3.</span> <span class="nav-text">가중치 공유(Weight tying)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B5%AC%ED%98%84-1"><span class="nav-number">5.4.</span> <span class="nav-text">구현</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B8%B0%EC%A1%B4-RNN%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.</span> <span class="nav-text">기존 RNN의 문제점</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#gradient-clipping"><span class="nav-number">1.1.</span> <span class="nav-text">gradient clipping</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM"><span class="nav-number">2.</span> <span class="nav-text">LSTM</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#output-gate%EC%9D%98-%EC%97%B4%EB%A6%BC-%EC%83%81%ED%83%9C"><span class="nav-number">2.0.1.</span> <span class="nav-text">output gate의 열림 상태</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#output-gate"><span class="nav-number">2.0.2.</span> <span class="nav-text">output gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#forget-gate"><span class="nav-number">2.0.3.</span> <span class="nav-text">forget gate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%83%88%EB%A1%9C%EC%9A%B4-%EA%B8%B0%EC%96%B5-%EC%85%80"><span class="nav-number">2.0.4.</span> <span class="nav-text">새로운 기억 셀</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#input-gate"><span class="nav-number">2.0.5.</span> <span class="nav-text">input gate</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM%EC%9D%98-%EA%B8%B0%EC%9A%B8%EA%B8%B0-%ED%9D%90%EB%A6%84"><span class="nav-number">2.1.</span> <span class="nav-text">LSTM의 기울기 흐름</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EA%B5%AC%ED%98%84"><span class="nav-number">3.</span> <span class="nav-text">구현</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Time-LSTM"><span class="nav-number">3.1.</span> <span class="nav-text">Time LSTM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LSTM%EC%9D%84-%EC%82%AC%EC%9A%A9%ED%95%9C-RNNLM"><span class="nav-number">4.</span> <span class="nav-text">LSTM을 사용한 RNNLM</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%99%EC%8A%B5"><span class="nav-number">4.1.</span> <span class="nav-text">학습</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RNNLM-%EA%B0%9C%EC%84%A0"><span class="nav-number">5.</span> <span class="nav-text">RNNLM 개선</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#LSTM-%EA%B3%84%EC%B8%B5%EC%9D%98-%EB%8B%A4%EC%B8%B5%ED%99%94"><span class="nav-number">5.1.</span> <span class="nav-text">LSTM 계층의 다층화</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">5.2.</span> <span class="nav-text">Dropout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B0%80%EC%A4%91%EC%B9%98-%EA%B3%B5%EC%9C%A0-Weight-tying"><span class="nav-number">5.3.</span> <span class="nav-text">가중치 공유(Weight tying)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B5%AC%ED%98%84-1"><span class="nav-number">5.4.</span> <span class="nav-text">구현</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%99%EC%8A%B5-1"><span class="nav-number">5.5.</span> <span class="nav-text">학습</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%EC%B6%9C%EB%A0%A5"><span class="nav-number">5.5.1.</span> <span class="nav-text">출력</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#epoch-40%EB%B2%88-%EC%A7%84%ED%96%89-%ED%9B%84-%ED%8F%89%EA%B0%80"><span class="nav-number">5.5.2.</span> <span class="nav-text">epoch 40번 진행 후 평가</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -496,20 +503,20 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">9</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">4</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">tags</span></a>
       </div>
   </nav>

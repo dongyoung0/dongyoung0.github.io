@@ -21,280 +21,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Introduction to Recommender Systems - 1</title>
-    <url>/2021/10/27/recomm/Introduction-to-Recommender-Systems-1/</url>
-    <content><![CDATA[<h1 id="Introducing-Recommender-Systems"><a href="#Introducing-Recommender-Systems" class="headerlink" title="Introducing Recommender Systems"></a>Introducing Recommender Systems</h1><h2 id="Preferences-and-Ratings"><a href="#Preferences-and-Ratings" class="headerlink" title="Preferences and Ratings"></a>Preferences and Ratings</h2><h3 id="Preference-model"><a href="#Preference-model" class="headerlink" title="Preference model"></a>Preference model</h3><ul>
-<li>추천을 하기 위해서는 유저가 어떤 것을 좋아하는지, 연관성이 있는 데이터는 어떤 것들인지 등에 대한 데이터가 필요함.<ul>
-<li>What users tell us (ratings)</li>
-<li>What users do (actions)</li>
-</ul>
-</li>
-</ul>
-<h4 id="Explicit-ratings"><a href="#Explicit-ratings" class="headerlink" title="Explicit ratings"></a>Explicit ratings</h4><ul>
-<li>직접적 선호도 : 사용자에게 직접 물어봐서 얻을 수 있음<ul>
-<li>별점 : 별 반개, 별의 의미(5점 : 최고 등)</li>
-<li>좋아요 : Up/Down(Like, +1등 좋아요만 집계하는 경우도 있음). 수명이 짧은 아이템(게시글)등에 사용</li>
-<li>연속적인 스케일의 점수</li>
-<li>두 아이템간의 비교</li>
-<li>Hybrid</li>
-</ul>
-</li>
-<li>Difficulties <ul>
-<li>Joke ratings : 노이즈가 존재</li>
-<li>시간에 사용자의 선호도가 바뀔 수 있음</li>
-<li>평점, 좋아요가 상황에 따라 어떤 의미인지가 다를 수 있음</li>
-</ul>
-</li>
-</ul>
-<h4 id="Implicit-data"><a href="#Implicit-data" class="headerlink" title="Implicit data"></a>Implicit data</h4><ul>
-<li>간접적 데이터 : 사용자의 행동에 의해 수집된 정보<ul>
-<li>Click : 평점은 주지 않아도 특정 종류의 기사를 많이 클릭했을 수 있음</li>
-<li>Purchase : 구매도 마찬가지</li>
-<li>Follow </li>
-</ul>
-</li>
-<li>Difficulties<ul>
-<li>물건을 구매했지만, 마음에 들지는 않을 수 있음.</li>
-<li>클릭했다고 해서, 해당 게시글을 좋아하는건 아님</li>
-<li>또 위의 행동들(binary)를 어떻게 수치화 할지?</li>
-</ul>
-</li>
-</ul>
-<h2 id="Predictions-and-Recommendations"><a href="#Predictions-and-Recommendations" class="headerlink" title="Predictions and Recommendations"></a>Predictions and Recommendations</h2><h4 id="비교"><a href="#비교" class="headerlink" title="비교"></a>비교</h4><ul>
-<li>추천은 사용자가 좋아할만한 아이템(혹은 아이템의 리스트)를 제공해 줌</li>
-</ul>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th></th>
-<th>Prediction</th>
-<th>Recommendation</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>pro</td>
-<td>해당 아이템이 얼마나 좋을지 수치로 보여줌</td>
-<td>여러 아이템들 중 좋아할 만한 선택지를 제시해 줌</td>
-</tr>
-<tr>
-<td>con</td>
-<td>잘못된 정보를 줄 수 있음</td>
-<td>추천 아이템이 별로일 경우, 다른 선택지들의 정보를 보여주지 않음</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h4 id="추천은-얼마나-explicit-해야-하는가"><a href="#추천은-얼마나-explicit-해야-하는가" class="headerlink" title="추천은 얼마나 explicit 해야 하는가?"></a>추천은 얼마나 explicit 해야 하는가?</h4><ul>
-<li>너무 구체적으로 추천해주면 사람들이 잘 믿지 않음.</li>
-<li>구체적인 예측과 soft한 추천 사이의 균형을 잘 맞춰야 함.</li>
-<li>Soft하게 여러 선택지를 제시해주고 그 중에서 사용자가 선택하도록 하면 좋음.</li>
-</ul>
-<h2 id="Taxonomy-of-Recommenders"><a href="#Taxonomy-of-Recommenders" class="headerlink" title="Taxonomy of Recommenders"></a>Taxonomy of Recommenders</h2><ul>
-<li>다음 8가지를 고려하여 Recommender를 분류<ul>
-<li>Domain, Purpose, Recommendation context, Whose opinions, Personalization level, Privacy and Trustworthiness, Interfaces, Recommendation Algorithms</li>
-</ul>
-</li>
-</ul>
-<h4 id="Domain"><a href="#Domain" class="headerlink" title="Domain"></a>Domain</h4><ul>
-<li>어떤 것을 추천하는지?</li>
-<li>기사(text)? 물건(product)? 음악(Sequence)? 등</li>
-<li>새로운 아이템(새로나온 영화, 책 등)을 추천하는지, 오래된 아이템(음악, 물건 등)을 다시 추천하는 것인지?</li>
-</ul>
-<h4 id="Purpose"><a href="#Purpose" class="headerlink" title="Purpose"></a>Purpose</h4><ul>
-<li>추천의 목적.</li>
-<li>상품을 구매하도록 유도하는 것 </li>
-<li>사용자를 교육하는 것 : Word Processor의 Tip 기능, TripAdvisor의 호텔 추천</li>
-<li>유저들간의 커뮤니티를 형성하는 것 : SNS(Referral Web)</li>
-</ul>
-<h4 id="Recommendation-Context"><a href="#Recommendation-Context" class="headerlink" title="Recommendation Context"></a>Recommendation Context</h4><ul>
-<li>추천하는 상황, 맥락 : 유저가 추천을 받을때 무엇을 하고 있는지?</li>
-<li>음악을 듣고있는지, 쇼핑중인지, 다른 사람과 교류중인지 등을 고려해야 함</li>
-</ul>
-<h4 id="Whose-Opinions"><a href="#Whose-Opinions" class="headerlink" title="Whose Opinions"></a>Whose Opinions</h4><ul>
-<li>추천이란 것은 누군가의 의견을 제시해주는 것임</li>
-<li>전문가? 모든 사람? 유저와 비슷한 사람?</li>
-</ul>
-<h4 id="Personalization-Level"><a href="#Personalization-Level" class="headerlink" title="Personalization Level"></a>Personalization Level</h4><ul>
-<li>Generic / Non-Personalized : 모든 사람이 같은 추천을 받음</li>
-<li>Demographic : 특정 그룹(성별, 나이 등)에 맞춰서 추천</li>
-<li>Ephemeral : 현재 활동에 의한 추천</li>
-<li>Persistent : 관심 및 선호도에 의한 추천</li>
-</ul>
-<h4 id="Privacy-and-Trustworthiness"><a href="#Privacy-and-Trustworthiness" class="headerlink" title="Privacy and Trustworthiness"></a>Privacy and Trustworthiness</h4><ul>
-<li>Privacy : 추천을 할 시, 개인정보를 너무 자세히 알고 있다고 생각할 수 있다.</li>
-<li>Trustworthiness: 추천이 얼마나 정직한지? 추천자가 자기 이득을 위해 정직한 추천을 하지 않을 수 있음</li>
-</ul>
-<h4 id="Interfaces"><a href="#Interfaces" class="headerlink" title="Interfaces"></a>Interfaces</h4><ul>
-<li><p>Input(추천시 사용하는 정보)</p>
-<ul>
-<li>Explicit</li>
-<li>Implicit</li>
-</ul>
-</li>
-<li><p>Output(추천의 종류)</p>
-<ul>
-<li>Predictions</li>
-<li>Recommendations</li>
-<li>Filtering</li>
-<li>Organic vs. Explicit presentation</li>
-</ul>
-</li>
-</ul>
-<h4 id="Recommendation-Algorithms"><a href="#Recommendation-Algorithms" class="headerlink" title="Recommendation Algorithms"></a>Recommendation Algorithms</h4><h5 id="Basic-Model"><a href="#Basic-Model" class="headerlink" title="Basic Model"></a>Basic Model</h5><ul>
-<li>Users : 추천 받을 사용자</li>
-<li>Items : 추천할 아이템</li>
-<li>Ratings : 사용자가 아이템을 좋아하는지? 선호도.</li>
-<li>(Community) : 사용자들의 의견/선호가 모이는 공간</li>
-</ul>
-<h5 id="Non-Personalizer-Summary-Statistics"><a href="#Non-Personalizer-Summary-Statistics" class="headerlink" title="Non-Personalizer Summary Statistics"></a>Non-Personalizer Summary Statistics</h5><ul>
-<li>Community 외부 정보 사용 : 베스트 셀러, Trending-Hot</li>
-<li>Summary of Community Ratings : Best-liked</li>
-<li>빌보드 랭킹, TripAdvisor 호텔 랭킹 등이 있</li>
-</ul>
-<h5 id="Content-Based-Filtering"><a href="#Content-Based-Filtering" class="headerlink" title="Content-Based Filtering"></a>Content-Based Filtering</h5><ul>
-<li>User Ratings x Item Attributes =&gt; Model</li>
-<li>사용자가 부여하는 평점, item의 속성을 이용해 User Model을 만듬</li>
-<li>ex) 사용자가 Action 영화(Item attribute)에 계속 좋은 평점(User Rating)을 줬다면 User Model 이 사용자가 어떤 배우를 좋아하는지 등을 추천 가능</li>
-<li>개인 뉴스피드, 아티스트별/장르별 뮤직 피드</li>
-</ul>
-<h5 id="Personalized-Collaborative-Filtering"><a href="#Personalized-Collaborative-Filtering" class="headerlink" title="Personalized Collaborative Filtering"></a>Personalized Collaborative Filtering</h5><ul>
-<li>다른 사람들의 의견을 바탕으로 예측/추천</li>
-<li>User model, Item model : set of ratings</li>
-<li>(U, I)  행렬을 rating으로 채우고 빈 부분을 채움</li>
-</ul>
-<h5 id="Collaborative-Filtering"><a href="#Collaborative-Filtering" class="headerlink" title="Collaborative Filtering"></a>Collaborative Filtering</h5><ul>
-<li>User - user : 비슷한 사람들을 묶어서 그 사람들의 의견을 바탕으로 추천</li>
-<li>Item - item : 비슷한 item끼리 묶어서 각 item의 평점에 따라 비슷한 item들도 추천</li>
-<li>Dimensionality reduction</li>
-</ul>
-<h5 id="Others"><a href="#Others" class="headerlink" title="Others"></a>Others</h5><ul>
-<li>Interactive recommenders : critique-based, dialog-based</li>
-<li>Hybrids of various techniques</li>
-</ul>
-]]></content>
-      <categories>
-        <category>추천시스템</category>
-        <category>coursera</category>
-      </categories>
-      <tags>
-        <tag>추천시스템</tag>
-        <tag>coursera</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Introduction to Recommender Systems 2</title>
-    <url>/2021/10/30/recomm/Introduction-to-Recommender-Systems-2/</url>
-    <content><![CDATA[<h1 id="Non-Personalized-and-Stereotype-Based-Recommenders"><a href="#Non-Personalized-and-Stereotype-Based-Recommenders" class="headerlink" title="Non-Personalized and Stereotype-Based Recommenders"></a>Non-Personalized and Stereotype-Based Recommenders</h1><h2 id="Intro"><a href="#Intro" class="headerlink" title="Intro"></a>Intro</h2><h3 id="Why-Non-Personalized"><a href="#Why-Non-Personalized" class="headerlink" title="Why Non-Personalized?"></a>Why Non-Personalized?</h3><ul>
-<li>정보가 별로 없는 새로운 유저들에게 추천해주기 위해</li>
-<li>Simple but beneficial. 계산량이 적지만 좋은 성능을 보임</li>
-<li>온라인 커뮤니티(레딧 등)에서 많이 사용함</li>
-<li>personalization이 불가능한 App &amp; media에서 사용</li>
-</ul>
-<h3 id="Weak-Personalization"><a href="#Weak-Personalization" class="headerlink" title="Weak Personalization"></a>Weak Personalization</h3><p>우리가 유저에 대해 아는 정보가 별로 없을 때</p>
-<ul>
-<li>우편번호나 주소</li>
-<li>나이, 성별, 국적, 종교 등</li>
-</ul>
-<p>을 고려하여 추천</p>
-<ul>
-<li>Demographics</li>
-<li>Stereotypes</li>
-</ul>
-<h2 id="Summary-Statistics"><a href="#Summary-Statistics" class="headerlink" title="Summary Statistics"></a>Summary Statistics</h2><h3 id="Zagat-Guide"><a href="#Zagat-Guide" class="headerlink" title="Zagat Guide"></a>Zagat Guide</h3><p>설문조사를 통해 음식점 점수를 0~30까지 매김 (현재는 5 star(with half)로 대체되었음)</p>
-<p>이 때, 점수의 의미?</p>
-<ul>
-<li>Popularity</li>
-<li>평균 평점</li>
-<li>너가 좋아할 확률</li>
-</ul>
-<p>어떻게 계산할 지?</p>
-<ul>
-<li>빈도</li>
-<li>평균</li>
-<li>좀 더 복잡하게?</li>
-</ul>
-<h4 id="점수-계산-방식"><a href="#점수-계산-방식" class="headerlink" title="점수 계산 방식"></a>점수 계산 방식</h4><ul>
-<li><p>Rating = {0, 1, 2, 3}</p>
-</li>
-<li><p>Score = round(MEAN(ratings)*10)</p>
-</li>
-</ul>
-<p>심플하지만 좋은 성능을 냄</p>
-<h4 id="Popularity"><a href="#Popularity" class="headerlink" title="Popularity?"></a>Popularity?</h4><ul>
-<li><p>Popularity는 좋은 지표가 될 수 있지만, 아닌 경우도 있음</p>
-</li>
-<li><p>평균을 통해 Popularity를 계산하는 것이 항상 좋지는 않음</p>
-<ul>
-<li>유저 평가를 normalize할수도 있음 : 3~5점의 점수를 주는 사람과 1~3점의 점수를 주는 사람</li>
-<li>각 평가자들의 신뢰도를 고려해야 함 </li>
-</ul>
-</li>
-</ul>
-<h4 id="Zagat-Guide의-문제점"><a href="#Zagat-Guide의-문제점" class="headerlink" title="Zagat Guide의 문제점"></a>Zagat Guide의 문제점</h4><ul>
-<li><p>Zagat Guide의 평가가 점점 나빠짐.</p>
-<ul>
-<li>평범한 식당이 좋은 점수를 받거나, 훌륭한 식당이 평범한 점수를 받는 경우가 많음</li>
-<li>Self-selection bias : ‘리뷰를 남기는 사람’ 자체가 일반적인 사람들과는 다른 어떤 특성을 가지고 있을 수 있음(맛있게 먹은 경우만 리뷰를 남긴다던지, 불만사항이 있는 경우에만 리뷰를 남긴다던지)</li>
-<li>Increased diversity of raters : 이용자가 많아질수록 취향이 다른 다양한 평가자들이 늘어남</li>
-</ul>
-</li>
-<li><p>그렇기 때문에 Personalized Recommendation이 필요함</p>
-</li>
-</ul>
-<h3 id="Display"><a href="#Display" class="headerlink" title="Display"></a>Display</h3><h4 id="목적"><a href="#목적" class="headerlink" title="목적"></a>목적</h4><ul>
-<li>To help users decide to buy/read/view the item</li>
-</ul>
-<h4 id="간단한-display-방법들"><a href="#간단한-display-방법들" class="headerlink" title="간단한 display 방법들"></a>간단한 display 방법들</h4><ul>
-<li>Average rating <ul>
-<li>평가를 한 사람이 그 item을 좋아하는지?</li>
-<li>Popularity를 나타내지는 않음</li>
-</ul>
-</li>
-<li>Net upvotes / # of likes<ul>
-<li>Popularity를 나타내지만 각 item의 특징을 나타내지는 못함</li>
-</ul>
-</li>
-<li>% &gt;= 4 stars<ul>
-<li>별점 4점 이상을 받은 비율</li>
-<li>비율이 높을수록 대체로 좋다는 것을 의미</li>
-</ul>
-</li>
-<li>Full distribution<ul>
-<li>전체 분포를 보여주면 사용자 입장에서 이해하기 어려움</li>
-</ul>
-</li>
-</ul>
-<h3 id="Ranking-Items"><a href="#Ranking-Items" class="headerlink" title="Ranking Items"></a>Ranking Items</h3><h4 id="왜-점수로-나타내지-않는지"><a href="#왜-점수로-나타내지-않는지" class="headerlink" title="왜 점수로 나타내지 않는지?"></a>왜 점수로 나타내지 않는지?</h4><ul>
-<li>표본이 적은 경우(단 한개의 5점 리뷰를 받은 가게가 평점이 가장 높음)</li>
-<li>정보가 multivariate일 경우</li>
-<li>Domain이나 business 측면에서 고려할 부분들(평점이 높았으나 오래된 아이템 등)</li>
-</ul>
-<h4 id="고려할-부분들"><a href="#고려할-부분들" class="headerlink" title="고려할 부분들"></a>고려할 부분들</h4><ul>
-<li>Confidence : 신뢰도</li>
-<li>Risk tolerance : 하이리스크 하이리턴?  확실한 item만 추천할 것인지?</li>
-<li>Domain이나 business 측면에서 고려할 부분들 : 고객의 나이대, 시스템의 목적 등</li>
-</ul>
-<h4 id="Damped-means"><a href="#Damped-means" class="headerlink" title="Damped means"></a>Damped means</h4><p>데이터가 적을때 평점이 정확하지 않을 수 있는 점을 고려한 평균</p>
-<script type="math/tex; mode=display">
-{\Sigma_u r_{ui} + k\mu} \over{n+k}</script><ul>
-<li>$r_{ui}$ : $i$번째 사용자의 평점</li>
-<li>$n$ : 평점의 개수</li>
-<li>$k$ : 신뢰구간을 조절</li>
-<li>$\mu$ : 평점의 평균</li>
-</ul>
-]]></content>
-      <categories>
-        <category>추천시스템</category>
-        <category>coursera</category>
-      </categories>
-      <tags>
-        <tag>추천시스템</tag>
-        <tag>coursera</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SQL-01</title>
     <url>/2021/08/30/sql/SQL/</url>
     <content><![CDATA[<h1 id="SQL-1"><a href="#SQL-1" class="headerlink" title="SQL-1"></a>SQL-1</h1><h3 id="DB-Database"><a href="#DB-Database" class="headerlink" title="DB : Database"></a>DB : Database</h3><p>데이터를 통합하여 관리하는 데이터의 집합</p>
@@ -538,48 +264,8 @@
       </tags>
   </entry>
   <entry>
-    <title>Ch 02. 단어의 분산 표현</title>
-    <url>/2021/10/16/nlp/from-scratch/Ch02%20%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/</url>
-    <content><![CDATA[<h2 id="단어의-의미"><a href="#단어의-의미" class="headerlink" title="단어의 의미"></a>단어의 의미</h2><ul>
-<li>자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함</li>
-</ul>
-<h3 id="단어의-의미를-표현하는-기법들"><a href="#단어의-의미를-표현하는-기법들" class="headerlink" title="단어의 의미를 표현하는 기법들"></a>단어의 의미를 표현하는 기법들</h3><ul>
-<li>시소러스를 활용한 기법(WordNet)</li>
-<li>통계 기반 기법(corpus)</li>
-<li>추론 기반 기법(word2vec)</li>
-</ul>
-<h2 id="시소러스-thesaurus"><a href="#시소러스-thesaurus" class="headerlink" title="시소러스(thesaurus)"></a>시소러스(thesaurus)</h2><ul>
-<li>WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작업을 할 수 있음</li>
-<li>그러나 시소러스 기반 기법은 비용 문제나 새로운 단어에 대응이 어렵다는 문제가 있음</li>
-</ul>
-<h2 id="통계-기반-기법-Corpus"><a href="#통계-기반-기법-Corpus" class="headerlink" title="통계 기반 기법 - Corpus"></a>통계 기반 기법 - Corpus</h2><ul>
-<li>그 결과 현재는 말뭉치(corpus)를 이용해 vectorization하는 방법을 주로 사용</li>
-<li>분포 가설(distributional hypothesis) : ‘단어의 의미는 주변 단어에 의해 형성된다’는 가설</li>
-</ul>
-<h3 id="동시발생-행렬-co-occurence-matrix"><a href="#동시발생-행렬-co-occurence-matrix" class="headerlink" title="동시발생 행렬(co-occurence matrix)"></a>동시발생 행렬(co-occurence matrix)</h3><ul>
-<li>각 말뭉치 안의 각 단어에 대해 주변 단어의 빈도를 집계</li>
-<li>Cosine similarity로 단어 벡터간 유사도 계산</li>
-</ul>
-<h3 id="PPMI-Positive-Pointwise-Mutual-Information"><a href="#PPMI-Positive-Pointwise-Mutual-Information" class="headerlink" title="PPMI(Positive Pointwise Mutual Information)"></a>PPMI(Positive Pointwise Mutual Information)</h3><ul>
-<li>PPMI : ‘a’, ‘the’ 처럼 단어와 관련성이 적지만 동시에 자주 발생하는 경우를 고려<ul>
-<li>PPMI의 경우 차원수가 corpus의 어휘 수와 같으므로 차원수가 너무 커지는 문제가 있음</li>
-<li>SVD를 통해 차원축소</li>
-</ul>
-</li>
-<li>PTB dataset을 통해 테스트</li>
-</ul>
-]]></content>
-      <categories>
-        <category>NLP</category>
-      </categories>
-      <tags>
-        <tag>NLP</tag>
-        <tag>from-scratch</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Ch 03. Word2vec</title>
-    <url>/2021/10/18/nlp/from-scratch/Ch03%20word2vec/</url>
+    <url>/2021/10/18/nlp/from-scratch/ch03_word2vec/</url>
     <content><![CDATA[<h2 id="추론-기반-기법"><a href="#추론-기반-기법" class="headerlink" title="추론 기반 기법"></a>추론 기반 기법</h2><h3 id="기존-통계-기반-기법의-문제점"><a href="#기존-통계-기반-기법의-문제점" class="headerlink" title="기존 통계 기반 기법의 문제점"></a>기존 통계 기반 기법의 문제점</h3><ul>
 <li>단어의 개수가 $N$개일 때 Co-occurence matrix의 크기는 $N \times N$으로 너무 큼.</li>
 <li>SVD를 사용하여 차원 축소를 진행하는데, 이때 SVD를 적용하는 비용도 $O(n^3)$으로 너무 큼.</li>
@@ -662,13 +348,53 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
         <category>NLP</category>
       </categories>
       <tags>
-        <tag>from-scratch</tag>
         <tag>nlp</tag>
+        <tag>from-scratch</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Ch 02. 단어의 분산 표현</title>
+    <url>/2021/10/16/nlp/from-scratch/ch02_%EB%8B%A8%EC%96%B4%EC%9D%98%20%EB%B6%84%EC%82%B0%ED%91%9C%ED%98%84/</url>
+    <content><![CDATA[<h2 id="단어의-의미"><a href="#단어의-의미" class="headerlink" title="단어의 의미"></a>단어의 의미</h2><ul>
+<li>자연어를 컴퓨터에게 이해시키기 위해서는 ‘단어의 의미’를 이해시키는 것이 중요함</li>
+</ul>
+<h3 id="단어의-의미를-표현하는-기법들"><a href="#단어의-의미를-표현하는-기법들" class="headerlink" title="단어의 의미를 표현하는 기법들"></a>단어의 의미를 표현하는 기법들</h3><ul>
+<li>시소러스를 활용한 기법(WordNet)</li>
+<li>통계 기반 기법(corpus)</li>
+<li>추론 기반 기법(word2vec)</li>
+</ul>
+<h2 id="시소러스-thesaurus"><a href="#시소러스-thesaurus" class="headerlink" title="시소러스(thesaurus)"></a>시소러스(thesaurus)</h2><ul>
+<li>WordNet 등의 시소러스를 이용하여 유의어를 얻거나, 단어사이의 유사도를 측정하는 등 유용한 작업을 할 수 있음</li>
+<li>그러나 시소러스 기반 기법은 비용 문제나 새로운 단어에 대응이 어렵다는 문제가 있음</li>
+</ul>
+<h2 id="통계-기반-기법-Corpus"><a href="#통계-기반-기법-Corpus" class="headerlink" title="통계 기반 기법 - Corpus"></a>통계 기반 기법 - Corpus</h2><ul>
+<li>그 결과 현재는 말뭉치(corpus)를 이용해 vectorization하는 방법을 주로 사용</li>
+<li>분포 가설(distributional hypothesis) : ‘단어의 의미는 주변 단어에 의해 형성된다’는 가설</li>
+</ul>
+<h3 id="동시발생-행렬-co-occurence-matrix"><a href="#동시발생-행렬-co-occurence-matrix" class="headerlink" title="동시발생 행렬(co-occurence matrix)"></a>동시발생 행렬(co-occurence matrix)</h3><ul>
+<li>각 말뭉치 안의 각 단어에 대해 주변 단어의 빈도를 집계</li>
+<li>Cosine similarity로 단어 벡터간 유사도 계산</li>
+</ul>
+<h3 id="PPMI-Positive-Pointwise-Mutual-Information"><a href="#PPMI-Positive-Pointwise-Mutual-Information" class="headerlink" title="PPMI(Positive Pointwise Mutual Information)"></a>PPMI(Positive Pointwise Mutual Information)</h3><ul>
+<li>PPMI : ‘a’, ‘the’ 처럼 단어와 관련성이 적지만 동시에 자주 발생하는 경우를 고려<ul>
+<li>PPMI의 경우 차원수가 corpus의 어휘 수와 같으므로 차원수가 너무 커지는 문제가 있음</li>
+<li>SVD를 통해 차원축소</li>
+</ul>
+</li>
+<li>PTB dataset을 통해 테스트</li>
+</ul>
+]]></content>
+      <categories>
+        <category>NLP</category>
+      </categories>
+      <tags>
+        <tag>from-scratch</tag>
+        <tag>NLP</tag>
       </tags>
   </entry>
   <entry>
     <title>Ch 04. Word2vec 개선</title>
-    <url>/2021/10/22/nlp/from-scratch/ch04%20CBOW/</url>
+    <url>/2021/10/22/nlp/from-scratch/ch04_CBOW/</url>
     <content><![CDATA[<h2 id="Simple-CBOW의-문제점"><a href="#Simple-CBOW의-문제점" class="headerlink" title="Simple CBOW의 문제점"></a>Simple CBOW의 문제점</h2><ul>
 <li>window size를 1로 한정했음<ul>
 <li>원하는 window size에 대해 계산할 수 있도록 개선 </li>
@@ -949,8 +675,8 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
         <category>from-scratch</category>
       </categories>
       <tags>
-        <tag>from-scratch</tag>
         <tag>nlp</tag>
+        <tag>from-scratch</tag>
       </tags>
   </entry>
   <entry>
@@ -1086,8 +812,8 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
         <category>from-scratch</category>
       </categories>
       <tags>
-        <tag>from-scratch</tag>
         <tag>nlp</tag>
+        <tag>from-scratch</tag>
       </tags>
   </entry>
   <entry>
@@ -1118,8 +844,7 @@ hello [-1.1618923  -0.8838123   0.34882295 -0.72758615 -0.9388194 ]
 </ul>
 <h3 id="gradient-clipping"><a href="#gradient-clipping" class="headerlink" title="gradient clipping"></a>gradient clipping</h3><ul>
 <li><p>기울기 폭발의 해결방법 중 하나.  </p>
-<script type="math/tex; mode=display">
-if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat g</script></li>
+<script type="math/tex; mode=display">if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat g</script></li>
 <li><p>기울기 g가 일정 값(threshold) 이상으로 커지면 기울기를 수정해 주는 것.</p>
 </li>
 </ul>
@@ -1140,40 +865,32 @@ if~~\| \hat g \| \geq theshold~:~~~ \hat g = {threshold \over \| \hat g \|} \hat
 <p><img src="/image/nlp-from-scratch/fig%206-15.png" alt="6-15"></p>
 <ul>
 <li>LSTM에는 기존 RNN과 다르게 기억 셀(memory cell) $c$ 라는 경로가 있음  </li>
-<li><p>$c_t$에는 시각 $t$에서의 LSTM의 기억이 저장되어 있음<br>이 $c_t$를 통해 $h_t=tanh(c_t)$를 계산  </p>
-<h4 id="output-gate의-열림-상태"><a href="#output-gate의-열림-상태" class="headerlink" title="output gate의 열림 상태"></a>output gate의 열림 상태</h4><script type="math/tex; mode=display">
-o = \sigma(x_{t} W_{x}^{(o)} + h_{t-1}W_{h}^{(o)} + b^{(o)})</script><ul>
-<li>$tanh(c_t)$의 원소들에 대해 ‘그것이 다음 시각의 hidden state에 얼마나 중요한가’를 조정  </li>
+<li><script type="math/tex">c_t</script> 에는 시각 $t$에서의 LSTM의 기억이 저장되어 있음<br>이 `$c_t$를 통해 $h_t=tanh(c_t)$를 계산  <h4 id="output-gate의-열림-상태"><a href="#output-gate의-열림-상태" class="headerlink" title="output gate의 열림 상태"></a>output gate의 열림 상태</h4></li>
 </ul>
-</li>
+<script type="math/tex; mode=display">o = \sigma(x_{t} W_{x}^{(o)} + h_{t-1}W_{h}^{(o)} + b^{(o)})</script><ul>
+<li>$tanh(c_t)$의 원소들에 대해 ‘그것이 다음 시각의 hidden state에 얼마나 중요한가’를 조정  <ul>
 <li>여기서 $\sigma$(sigmoid)의 출력은 0~1로 데이터를 얼마만큼 통과시킬지를 정하는 비율  </li>
 </ul>
-<h4 id="output-gate"><a href="#output-gate" class="headerlink" title="output gate"></a>output gate</h4><script type="math/tex; mode=display">
-h_{t} = o \circ tanh(c_{t})</script><ul>
-<li>여기서 tanh의 출력은 -1.0~1.0으로 ‘정보’의 강약(정도)를 표시한다고 볼 수 있음  <ul>
-<li>정보를 얼마만큼 통과시킬지 정하는 sigmoid와 다르게 실질적인 ‘정보’를 지니는 데이터에는 tanh를 주로 사용</li>
-</ul>
 </li>
+</ul>
+<h4 id="output-gate"><a href="#output-gate" class="headerlink" title="output gate"></a>output gate</h4><script type="math/tex; mode=display">h_{t} = o \circ tanh(c_{t})</script><p>여기서 tanh의 출력은 -1.0~1.0으로 ‘정보’의 강약(정도)를 표시한다고 볼 수 있음  </p>
+<ul>
+<li>정보를 얼마만큼 통과시킬지 정하는 sigmoid와 다르게 실질적인 ‘정보’를 지니는 데이터에는 tanh를 주로 사용</li>
 </ul>
 <h4 id="forget-gate"><a href="#forget-gate" class="headerlink" title="forget gate"></a>forget gate</h4><p><img src="/image/nlp-from-scratch/fig%206-16.png" alt="6-16"></p>
 <ul>
 <li><p>$c_{t-1}$의 기억 중 불필요한 기억을 잊게 해주는 게이트  </p>
-<script type="math/tex; mode=display">
-  f = \sigma(x_{t} W_{x}^{(f)} + h_{t-1}W_{h}^{(f)} + b^{(f)})</script><script type="math/tex; mode=display">
-  c_{t} = f \circ c_{t-1}</script></li>
-<li></li>
+<script type="math/tex; mode=display">f = \sigma(x_{t} W_{x}^{(f)} + h_{t-1}W_{h}^{(f)} + b^{(f)})</script><script type="math/tex; mode=display">c_{t} = f \circ c_{t-1}</script></li>
 </ul>
 <h4 id="새로운-기억-셀"><a href="#새로운-기억-셀" class="headerlink" title="새로운 기억 셀"></a>새로운 기억 셀</h4><p><img src="/image/nlp-from-scratch/fig%206-17.png" alt="6-17"></p>
 <ul>
 <li><p>새로 기억해야 할 정보를 기억 셀 $c$에 추가    </p>
-<script type="math/tex; mode=display">{$}
-  g = \tanh(x_{t} W_{x}^{(g)} + h_{t-1}W_{h}^{(g)} + b^{(g)})</script></li>
+<script type="math/tex; mode=display">g = \tanh(x_{t} W_{x}^{(g)} + h_{t-1}W_{h}^{(g)} + b^{(g)})</script></li>
 <li><p>잊어버릴 정보가 아니라 실질적으로 ‘기억’해야할 정보기 때문에 $sigmoid$가 아닌 $tanh$ 사용</p>
 <h4 id="input-gate"><a href="#input-gate" class="headerlink" title="input gate"></a>input gate</h4><p><img src="/image/nlp-from-scratch/fig%206-18.png" alt="6-18">   </p>
 </li>
 <li><p>위의 $g$로 새로 추가되는 정보가 얼마나 가치있는 정보인지 판단하기 위해 input gate로 가중치를 줌</p>
-<script type="math/tex; mode=display">
-  i = \sigma(x_{t} W_{x}^{(i)} + h_{t-1}W_{h}^{(i)} + b^{(i)})</script></li>
+<script type="math/tex; mode=display">i = \sigma(x_{t} W_{x}^{(i)} + h_{t-1}W_{h}^{(i)} + b^{(i)})</script></li>
 <li><p>이후 $i$와 $g$의 원소별 곱을 기억 셀 $c$에 추가</p>
 </li>
 </ul>
@@ -1186,7 +903,7 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
 <p><img src="/image/nlp-from-scratch/fig%206-19.png" alt="6-19"></p>
 <h2 id="구현"><a href="#구현" class="headerlink" title="구현"></a>구현</h2><ul>
 <li>아래 네가지 게이트에서 일어나는 계산들은 $W$만 다를 뿐 같은 계산을 수행함.(Affine transformation)</li>
-<li>4개의 가중치 $W$를 하나로 모아서 한번의 affine transformation만 수행할것임.<br><img src="/image/nlp-from-scratch/e%206-6.png" alt="6-6"></li>
+<li>4개의 가중치 $W$를 하나로 모아서 한번의 affine transformation만 수행할것임.</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LSTM</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, Wx, Wh, b</span>):</span></span><br><span class="line">        self.params = [Wx, Wh, b]</span><br><span class="line">        self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, x, h_prev, c_prev</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        N, H = h_prev.shape</span><br><span class="line">        </span><br><span class="line">        A = np.matmul(x, Wx) + np.matmul(h_prev, Wh) + b</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># slice</span></span><br><span class="line">        f = A[:, :H]</span><br><span class="line">        g = A[:, H:<span class="number">2</span>*H]</span><br><span class="line">        i = A[:, <span class="number">2</span>*H:<span class="number">3</span>*H]</span><br><span class="line">        o = A[:, <span class="number">3</span>*H:]</span><br><span class="line">        </span><br><span class="line">        f = sigmoid(f)</span><br><span class="line">        g = np.tanh(g)</span><br><span class="line">        i = sigmoid(i)</span><br><span class="line">        o = sigmoid(o)</span><br><span class="line">        </span><br><span class="line">        c_next = f * c_prev + g * i</span><br><span class="line">        h_next = o * np.tanh(c_next)</span><br><span class="line">        </span><br><span class="line">        self.cache = (x, h_prev, c_prev, i, f, g, o, c_next)</span><br><span class="line">        <span class="keyword">return</span> h_next, c_next</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dh_next, dc_next</span>):</span></span><br><span class="line">        Wx, Wh, b = self.params</span><br><span class="line">        x, h_prev, c_prev, i, f, g, o, c_next = self.cache</span><br><span class="line">        </span><br><span class="line">        tanh_c_next = np.tanh(c_next)</span><br><span class="line">        <span class="comment"># ?</span></span><br><span class="line">        ds = dc_next + (dh_next * o) * (<span class="number">1</span> - tanh_c_next **<span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        dc_prev = ds * f</span><br><span class="line">        df = ds * c_prev</span><br><span class="line">        dg = ds * i</span><br><span class="line">        di = ds * g</span><br><span class="line">        do = dh_next * tanh_c_next</span><br><span class="line">        </span><br><span class="line">        df *= f * (<span class="number">1</span> - f)</span><br><span class="line">        dg *= (<span class="number">1</span> - g**<span class="number">2</span>)</span><br><span class="line">        di *= i * (<span class="number">1</span> - i)</span><br><span class="line">        do *= o * (<span class="number">1</span> - o)</span><br><span class="line">        </span><br><span class="line">        dA = np.hstack((df, dg, di, do))</span><br><span class="line">        </span><br><span class="line">        dWh = np.dot(h_prev.T, dA)</span><br><span class="line">        dWx = np.dot(x.T, dA)</span><br><span class="line">        db = dA.<span class="built_in">sum</span>(axis=<span class="number">0</span>)</span><br><span class="line">        </span><br><span class="line">        self.grads[<span class="number">0</span>][...] = dWx</span><br><span class="line">        self.grads[<span class="number">1</span>][...] = dWh</span><br><span class="line">        self.grads[<span class="number">2</span>][...] = db</span><br><span class="line">        </span><br><span class="line">        dx = np.dot(dA, Wx.T)</span><br><span class="line">        dh_prev = np.dot(dA, Wh.T)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dx, dh_prev, dc_prev</span><br></pre></td></tr></table></figure>
 <h3 id="Time-LSTM"><a href="#Time-LSTM" class="headerlink" title="Time LSTM"></a>Time LSTM</h3><ul>
@@ -1231,7 +948,27 @@ h_{t} = o \circ tanh(c_{t})</script><ul>
 <li>Embedding layer와 Affine layer가 가중치를 공유함으로써 학습해야하는 parameter 수가 크게 줄어들고(계산량 감소 및 overfitting도 방지), 정확도도 향상<br><img src="/image/nlp-from-scratch/fig%206-35.png" alt="6-35"></li>
 </ul>
 <h3 id="구현-1"><a href="#구현-1" class="headerlink" title="구현"></a>구현</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">BetterRnnlm</span>(<span class="params">BaseModel</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size=<span class="number">10000</span>, wordvec_size=<span class="number">650</span>, hidden_size=<span class="number">650</span>, dropout_ratio=<span class="number">0.5</span></span>):</span></span><br><span class="line">        V, D, H = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        rn = np.random.randn</span><br><span class="line">        </span><br><span class="line">        embed_W = (rn(V, D)/<span class="number">100</span>).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx1 = (rn(D, <span class="number">4</span> * H) / np.sqrt(D)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh1 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b1 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx2 = (rn(D, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh2 = (rn(H, <span class="number">4</span> * H) / np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b2 = np.zeros(<span class="number">4</span> * H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_b = np.zeros(V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        self.layers = [</span><br><span class="line">            TimeEmbedding(embed_W),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx1, lstm_Wh1, lstm_b1, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeLSTM(lstm_Wx2, lstm_Wh2, lstm_b2, stateful=<span class="literal">True</span>),</span><br><span class="line">            TimeDropout(dropout_ratio),</span><br><span class="line">            TimeAffine(embed_W.T, affine_b)</span><br><span class="line">        ]</span><br><span class="line">        self.loss_layer = TimeSoftmaxWithLoss()</span><br><span class="line">        self.lstm_layers = [self.layers[<span class="number">2</span>], self.layers[<span class="number">4</span>]]</span><br><span class="line">        self.drop_layers = [self.layers[<span class="number">1</span>], self.layers[<span class="number">3</span>], self.layers[<span class="number">5</span>]]</span><br><span class="line">        </span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">        </span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span>(<span class="params">self, xs, train_flg=<span class="literal">False</span></span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.drop_layers:</span><br><span class="line">            layer.train_fig = train_fig</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.layers:</span><br><span class="line">            xs = layer.forward(xs)</span><br><span class="line">        <span class="keyword">return</span> xs</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs, ts,  ustrain_flg=<span class="literal">True</span></span>):</span></span><br><span class="line">        score = self.predict(xs, train_flg)</span><br><span class="line">        loss = self.loss_layer.forward(score, ts)</span><br><span class="line">        <span class="keyword">return</span> loss</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout=<span class="number">1</span></span>):</span></span><br><span class="line">        dout = self.loss_layer.backward(dout)</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> <span class="built_in">reversed</span>(self.layers):</span><br><span class="line">            dout = layer.backward(dout)</span><br><span class="line">        <span class="keyword">return</span> dout</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">reset_state</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> self.lstm_layers:</span><br><span class="line">            layer.reset_state()        </span><br></pre></td></tr></table></figure>
-]]></content>
+<h3 id="학습-1"><a href="#학습-1" class="headerlink" title="학습"></a>학습</h3><p>위 Rnnlm과 같은 조건으로 학습(epoch는 4번에서 40번으로 늘려서)</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">model = BetterRnnlm(vocab_size, wordvec_size, hidden_size, dropout)</span><br><span class="line">optimizer = SGD(lr)</span><br><span class="line">trainer = RnnlmTrainer(model, optimizer)</span><br><span class="line"></span><br><span class="line">best_ppl = <span class="built_in">float</span>(<span class="string">&#x27;inf&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(max_epoch):</span><br><span class="line">  trainer.fit(xs, ts, max_epoch=<span class="number">1</span>, batch_size=batch_size, time_size=time_size, max_grad=max_grad)</span><br><span class="line">  model.reset_state()</span><br><span class="line">  ppl = eval_perplexity(model, corpus_val)</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">f&#x27;perplexity : <span class="subst">&#123;ppl&#125;</span>&#x27;</span>)</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> best_ppl &gt; ppl:</span><br><span class="line">    best_ppl = ppl</span><br><span class="line">    model.save_params()</span><br><span class="line">  <span class="keyword">else</span>:</span><br><span class="line">    lr /= <span class="number">4.0</span></span><br><span class="line">    optimizer.lr = lr</span><br><span class="line">  </span><br><span class="line">  model.reset_state()</span><br><span class="line">  <span class="built_in">print</span>(<span class="string">&#x27;-&#x27;</span>*<span class="number">50</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="출력"><a href="#출력" class="headerlink" title="출력"></a>출력</h4><pre><code>| current_epoch 1 |  iters 1 / 1327 | time 0.4454360008239746[s] | perplexity 10000.160734654946
+test perplexity : 199.91582600396907
+| current_epoch 2 |  iters 1 / 1327 | time 0.42688775062561035[s] | perplexity 285.35975929723134
+test perplexity : 146.85835254402008
+| current_epoch 3 |  iters 1 / 1327 | time 0.401918888092041[s] | perplexity 220.99791134777234
+test perplexity : 125.61738284895596
+| current_epoch 4 |  iters 1 / 1327 | time 0.4348595142364502[s] | perplexity 193.85762995444483
+test perplexity : 112.8790201600887
+| current_epoch 5 |  iters 1 / 1327 | time 0.41679954528808594[s] | perplexity 171.20541935259646
+test perplexity : 105.05696537135755
+| current_epoch 6 |  iters 1 / 1327 | time 0.42535948753356934[s] | perplexity 158.62854755201397
+test perplexity : 100.56030860396797
+| current_epoch 7 |  iters 1 / 1327 | time 0.4258577823638916[s] | perplexity 146.75250942965903
+test perplexity : 96.68474006387768
+| current_epoch 8 |  iters 1 / 1327 | time 0.42501020431518555[s] | perplexity 141.41520295810776
+test perplexity : 94.68295145752191
+...
+</code></pre><h4 id="epoch-40번-진행-후-평가"><a href="#epoch-40번-진행-후-평가" class="headerlink" title="epoch 40번 진행 후 평가"></a>epoch 40번 진행 후 평가</h4><pre><code>test perplexity : 76.2854392816185
+</code></pre>]]></content>
       <categories>
         <category>NLP</category>
         <category>from-scratch</category>
