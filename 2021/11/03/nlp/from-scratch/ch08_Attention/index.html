@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Attentionseq2seq의 문제점 seq2seq은 Encoder가 문장을 ‘고정 길이’의 벡터로 변환해서 Decoder에 전달함.문장 길이와 관계 없이 ‘고정 길이’로 변환하기 때문에 긴 문장의 경우 필요한 정보가 다 담기지 못하는 문제가 발생함.  Endoder 개선 개선 방법으로, 각 단어 (시각)별 hidden state $h$를 모두 출력($h">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ch 08. Attention">
+<meta property="og:url" content="http://example.com/2021/11/03/nlp/from-scratch/ch08_Attention/index.html">
+<meta property="og:site_name" content="Blog">
+<meta property="og:description" content="Attentionseq2seq의 문제점 seq2seq은 Encoder가 문장을 ‘고정 길이’의 벡터로 변환해서 Decoder에 전달함.문장 길이와 관계 없이 ‘고정 길이’로 변환하기 때문에 긴 문장의 경우 필요한 정보가 다 담기지 못하는 문제가 발생함.  Endoder 개선 개선 방법으로, 각 단어 (시각)별 hidden state $h$를 모두 출력($h">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-2.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-4.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-8.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-15.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-16.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-22.png">
+<meta property="og:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/out%208-1.png">
+<meta property="article:published_time" content="2021-11-02T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-11T08:46:04.781Z">
+<meta property="article:author" content="Dongyoung Kim">
+<meta property="article:tag" content="nlp">
+<meta property="article:tag" content="attention">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2021/11/03/nlp/from-scratch/image/nlp-from-scratch/fig%208-2.png">
+
+<link rel="canonical" href="http://example.com/2021/11/03/nlp/from-scratch/ch08_Attention/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Ch 08. Attention | Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">공부한 내용을 정리하는 장소</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags<span class="badge">11</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories<span class="badge">4</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives<span class="badge">11</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/11/03/nlp/from-scratch/ch08_Attention/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Dongyoung Kim">
+      <meta itemprop="description" content="Mathematics, Python, ML, Data">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Ch 08. Attention<a href="https://github.com/user-name/repo-name/tree/branch-name/subdirectory-name_posts/nlp/from-scratch/ch08_Attention.md" class="post-edit-link" title="Edit this post" rel="noopener" target="_blank"><i class="fa fa-pencil-alt"></i></a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2021-11-03 00:00:00" itemprop="dateCreated datePublished" datetime="2021-11-03T00:00:00+09:00">2021-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-11-11 17:46:04" itemprop="dateModified" datetime="2021-11-11T17:46:04+09:00">2021-11-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+                  , 
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/from-scratch/" itemprop="url" rel="index"><span itemprop="name">from-scratch</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h1><h3 id="seq2seq의-문제점"><a href="#seq2seq의-문제점" class="headerlink" title="seq2seq의 문제점"></a>seq2seq의 문제점</h3><ul>
+<li>seq2seq은 Encoder가 문장을 ‘고정 길이’의 벡터로 변환해서 Decoder에 전달함.<br>문장 길이와 관계 없이 ‘고정 길이’로 변환하기 때문에 긴 문장의 경우 필요한 정보가 다 담기지 못하는 문제가 발생함.</li>
+</ul>
+<h3 id="Endoder-개선"><a href="#Endoder-개선" class="headerlink" title="Endoder 개선"></a>Endoder 개선</h3><ul>
+<li>개선 방법으로, 각 단어 (시각)별 hidden state $h$를 모두 출력($hs$)<br><img src="../image/nlp-from-scratch/fig%208-2.png" alt="8-2"></li>
+<li>이 떄, 각 시각의 $h$에는 직전에 입력된 단어(Encoder의 input)에 대한 정보가 많이 포함되어 있음.</li>
+</ul>
+<h3 id="Decoder-개선"><a href="#Decoder-개선" class="headerlink" title="Decoder 개선"></a>Decoder 개선</h3><ul>
+<li>Encoder가 각 단어에 대응하는 LSTM layer의 hidden state $h$를 모아서 $hs$로 출력해서 Decoder에 전달하면, Decoder는 $hs$를 다시 문장으로 변환함.<br><img src="../image/nlp-from-scratch/fig%208-4.png" alt="8-4"></li>
+<li>이 과정에서 ‘입력과 출력의 여러 단어 중 어떤 단어끼리 서로 관련되어 있는가?’(alignment)를 학습시키고자 함.<br>‘도착어 단어’(I)와 대응 관계에 있는 ‘출발어 단어’(나)의 정보를 골라내기 위해 Attention 매커니즘을 사용</li>
+</ul>
+<h4 id="Weighted-Sum"><a href="#Weighted-Sum" class="headerlink" title="Weighted Sum"></a>Weighted Sum</h4><ul>
+<li>Decoder의 각 시각마다, 입력된 단어와 대응 관계인 단어의 벡터를 $hs$에서 골라내고자 함.<br>그러나 $hs$에서 벡터를 선택하는 작업은 미분할 수 없기 때문에 back-propagation을 위해 미분 가능한 연산으로 대체</li>
+<li>각 단어의 중요도를 나타내는 가중치 $a$와 각 단어의 벡터 $hs$로부터 weighted sum을 구하여 맥락 벡터 $c$를 얻음<br><img src="../image/nlp-from-scratch/fig%208-8.png" alt="8-8"></li>
+<li>$c$에 현 시각의 변환을 수행하는데 필요한 정보(단어간의 대응 관계, alignment)가 담기는 방향으로 학습</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">WeightSum</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, hs, a</span>):</span></span><br><span class="line">        N, T, H = hs.shape</span><br><span class="line">        </span><br><span class="line">        ar = a.reshape(N, T, <span class="number">1</span>).repeat(H, axis=<span class="number">2</span>)</span><br><span class="line">        t = hs * ar</span><br><span class="line">        c = np.<span class="built_in">sum</span>(t, axis=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        self.cache = (hs, ar)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> c</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dc</span>):</span></span><br><span class="line">        hs, ar = self.cache</span><br><span class="line">        N, T, H = hs.shape</span><br><span class="line">        </span><br><span class="line">        dt = dc.reshape(N, <span class="number">1</span>, H).repeat(T, axis=<span class="number">1</span>)</span><br><span class="line">        dar = dt * hs</span><br><span class="line">        dhs = dt * ar</span><br><span class="line">        da = np.<span class="built_in">sum</span>(dar, axis=<span class="number">2</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dhs, da</span><br></pre></td></tr></table></figure>
+<h4 id="a를-구하는-방법"><a href="#a를-구하는-방법" class="headerlink" title="a를 구하는 방법"></a>a를 구하는 방법</h4><ul>
+<li>Decoder의 LSTM layer의 $h$가 Encoder의 출력 $hs$의 각 단어 벡터와 얼마나 ‘비슷한지’를 수치로 나타내서 가중치로 이용.  </li>
+<li>$h$와 $hs$의 내적을 통해 유사도 점수 $s$를 구하고, Softmax를 통해 정규화해서 가중치 $a$를 구함.<br><img src="../image/nlp-from-scratch/fig%208-15.png" alt="8-15"></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">&#x27;..&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> common.np <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> common.layers <span class="keyword">import</span> Softmax</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AttentionWeight</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        self.softmax = Softmax()</span><br><span class="line">        self.cache = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, hs, h</span>):</span></span><br><span class="line">        N, T, H = hs.shape</span><br><span class="line">        </span><br><span class="line">        hr = h.reshape(N, <span class="number">1</span>, H).repeat(T, axis=<span class="number">1</span>)</span><br><span class="line">        t = hs * hr</span><br><span class="line">        s = np.<span class="built_in">sum</span>(t, axis=<span class="number">2</span>)</span><br><span class="line">        a = self.softmax.forward(s)</span><br><span class="line">        </span><br><span class="line">        self.cache = (hs, hr)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, da</span>):</span></span><br><span class="line">        hs, hr = self.cache</span><br><span class="line">        N, T, H = hs.shape</span><br><span class="line">        </span><br><span class="line">        ds = self.softmax.backward(da)</span><br><span class="line">        dt = ds.reshape(N, T, <span class="number">1</span>).repeat(H, axis=<span class="number">2</span>)</span><br><span class="line">        dhs = dt*hr</span><br><span class="line">        dhr = dt*hs</span><br><span class="line">        dh = np.<span class="built_in">sum</span>(dhr, axis=<span class="number">1</span>)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> dhs, dh</span><br></pre></td></tr></table></figure>
+<h4 id="결합"><a href="#결합" class="headerlink" title="결합"></a>결합</h4><ul>
+<li>위에서 구현한 Weight Sum, Attention Weight를 하나로 결합.<br><img src="../image/nlp-from-scratch/fig%208-16.png" alt="8-16"></li>
+<li>Attention Weight layer가 Encoder의 출력 $hs$에 주목하여 각 단어의 가중치 $a$를 구하고, $a$와 $hs$의 Weighted Sum을 통해 맥락 벡터 $c$를 구함</li>
+<li>이 과정을 수행하는 layer를 Attention layer라고 부름.</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Attention</span>:</span></span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">           self.params, self.grads = [], []</span><br><span class="line">           self.attention_weight_layer = AttentionWeight()</span><br><span class="line">           self.weight_sum_layer = WeightSum()</span><br><span class="line">           self.attention_weight = <span class="literal">None</span></span><br><span class="line">           </span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, hs, h</span>):</span></span><br><span class="line">           a = self.attention_weight_layer.forward(hs, h)</span><br><span class="line">           out = self.weight_sum_layer.forward(hs, a)</span><br><span class="line">           self.attention_weight = a</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">return</span> out</span><br><span class="line">       </span><br><span class="line">       <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">           dhs0, da = self.weight_sum_layer.backward(dout)</span><br><span class="line">           dhs1, dh = self.attention_weight_layer.backward(da)</span><br><span class="line">           dhs = dhs0 + dhs1</span><br><span class="line">           </span><br><span class="line">           <span class="keyword">return</span> dhs, dh      </span><br></pre></td></tr></table></figure>
+<ul>
+<li>앞선 layer들과 마찬가지로 Time Attention layer 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TimeAttention</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        self.layers = <span class="literal">None</span></span><br><span class="line">        self.attention_weights = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, hs_enc, hs_dec</span>):</span></span><br><span class="line">        N, T, H = hs_dec.shape</span><br><span class="line">        out = np.empty_like(hs_dec)</span><br><span class="line">        self.layers = []</span><br><span class="line">        self.attention_weights = []</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T):</span><br><span class="line">            layer = Attention()</span><br><span class="line">            out[:, t, :] = layer.forward(hs_enc, hs_dec[:, t, :])</span><br><span class="line">            self.layers.append(layer)</span><br><span class="line">            self.attention_weights.append(layer.attention_weight)</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dout</span>):</span></span><br><span class="line">        N, T, H = dout.shape</span><br><span class="line">        dhs_enc = <span class="number">0</span></span><br><span class="line">        dhs_dec = np.empty_like(dout)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> t <span class="keyword">in</span> <span class="built_in">range</span>(T):</span><br><span class="line">            layer = self.layers[t]</span><br><span class="line">            dhs, dh = layer.backward(dout[:, t, :])</span><br><span class="line">            dhs_enc += dhs</span><br><span class="line">            dhs_dec[:, t, :] = dh</span><br><span class="line">            </span><br><span class="line">        <span class="keyword">return</span> dhs_enc, dhs_dec</span><br></pre></td></tr></table></figure>
+<ul>
+<li>기존 Affine layer와 LSTM layer 사이에 Attention layer를 넣어서 Decoder에 어텐션 정보를 추가</li>
+</ul>
+<h3 id="Attention을-포함한-seq2seq-구현"><a href="#Attention을-포함한-seq2seq-구현" class="headerlink" title="Attention을 포함한 seq2seq 구현"></a>Attention을 포함한 seq2seq 구현</h3><ul>
+<li>앞에서 구현해놓은 Enccoder에서 LSTM layer의 마지막 $h$만 반환하던 것에서 모든 $h$를 반환하는 것으로 변경</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sys.path.append(<span class="string">&#x27;../code/seq2seq&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> seq2seq <span class="keyword">import</span> Encoder, Seq2seq</span><br><span class="line"><span class="keyword">from</span> common.time_layers <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AttentionEncoder</span>(<span class="params">Encoder</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs</span>):</span></span><br><span class="line">        xs = self.embed.forward(xs)</span><br><span class="line">        hs = self.lstm.forward(xs)</span><br><span class="line">        <span class="keyword">return</span> hs</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dhs</span>):</span></span><br><span class="line">        dout = self.lstm.backward(dhs)</span><br><span class="line">        dout = self.embed.backward(dout)</span><br><span class="line">        <span class="keyword">return</span> dout</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Decoder의 경우 </li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AttentionDecoder</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, wordvec_size, hidden_size</span>):</span></span><br><span class="line">        V, D, H = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        rn = np.random.randn</span><br><span class="line">        embed_W = (rn(V, D)/<span class="number">100</span>).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wx = (rn(D, <span class="number">4</span>*H)/np.sqrt(D)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_Wh = (rn(H, <span class="number">4</span>*H)/np.sqrt(H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        lstm_b = np.zeros(<span class="number">4</span>*H).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_W = (rn(<span class="number">2</span>*H, V)/np.sqrt(<span class="number">2</span>*H)).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        affine_b = np.zeros(V).astype(<span class="string">&#x27;f&#x27;</span>)</span><br><span class="line">        </span><br><span class="line">        self.embed = TimeEmbedding(embed_W)</span><br><span class="line">        self.lstm = TimeLSTM(lstm_Wx, lstm_Wh, lstm_b, stateful=<span class="literal">True</span>)</span><br><span class="line">        <span class="comment"># attention layer 추가</span></span><br><span class="line">        self.attention = TimeAttention()</span><br><span class="line">        self.affine = TimeAffine(affine_W, affine_b)</span><br><span class="line">        layers = [self.embed, self.lstm, self.attention, self.affine]</span><br><span class="line">        </span><br><span class="line">        self.params, self.grads = [], []</span><br><span class="line">        <span class="keyword">for</span> layer <span class="keyword">in</span> layers:</span><br><span class="line">            self.params += layer.params</span><br><span class="line">            self.grads += layer.grads</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">forward</span>(<span class="params">self, xs, enc_hs</span>):</span></span><br><span class="line">        h = enc_hs[:,-<span class="number">1</span>]</span><br><span class="line">        self.lstm.set_state(h)</span><br><span class="line">        </span><br><span class="line">        out = self.embed.forward(xs)</span><br><span class="line">        dec_hs = self.lstm.forward(out)</span><br><span class="line">        <span class="comment"># attention layer를 통해 c 계산</span></span><br><span class="line">        c = self.attention.forward(enc_hs, dec_hs)</span><br><span class="line">        out = np.concatenate((c, dec_hs), axis=<span class="number">2</span>)</span><br><span class="line">        score = self.affine.forward(out)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> score</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">backward</span>(<span class="params">self, dscore</span>):</span></span><br><span class="line">        dout = self.affine.backward(dscore)</span><br><span class="line">        N, T, H2 = dout.shape</span><br><span class="line">        H = H2 // <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        dc, ddec_hs0 = dout[:,:,:H], dout[:,:,H:]</span><br><span class="line">        denc_hs, ddec_hs1 = self.attention.backward(dc)</span><br><span class="line">        ddec_hs = ddec_hs0 + ddec_hs1</span><br><span class="line">        dout = self.lstm.backward(ddec_hs)</span><br><span class="line">        dh = self.lstm.dh</span><br><span class="line">        denc_hs[:, -<span class="number">1</span>] += dh</span><br><span class="line">        self.embed.backward(dout)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> denc_hs</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">generate</span>(<span class="params">self, enc_hs, start_id, sample_size</span>):</span></span><br><span class="line">        sampled = []</span><br><span class="line">        sample_id = start_id</span><br><span class="line">        h = enc_hs[:, -<span class="number">1</span>]</span><br><span class="line">        self.lstm.set_state(h)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(sample_size):</span><br><span class="line">            x = np.array([sample_id]).reshape((<span class="number">1</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">            out = self.embed.forward(x)</span><br><span class="line">            dec_hs = self.lstm.forward(out)</span><br><span class="line">            c = self.attention.forward(enc_hs, dec_hs)</span><br><span class="line">            out = np.concatenate((c, dec_hs), axis=<span class="number">2</span>)</span><br><span class="line">            score = self.affine.forward(out)</span><br><span class="line"></span><br><span class="line">            sample_id = np.argmax(score.flatten())</span><br><span class="line">            sampled.append(sample_id)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> sampled</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>위 Attention Encoder와 Attention Decoder를 결합하여 Attention Seq2seq 구현</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AttentionSeq2seq</span>(<span class="params">Seq2seq</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, vocab_size, wordvec_size, hidden_size</span>):</span></span><br><span class="line">        args = vocab_size, wordvec_size, hidden_size</span><br><span class="line">        self.encoder = AttentionEncoder(*args)</span><br><span class="line">        self.decoder = AttentionDecoder(*args)</span><br><span class="line">        self.softmax = TimeSoftmaxWithLoss()</span><br><span class="line">        </span><br><span class="line">        self.params = self.encoder.params + self.decoder.params</span><br><span class="line">        self.grads = self.encoder.grads + self.decoder.grads</span><br></pre></td></tr></table></figure>
+<h2 id="날짜-형식-변환-문제"><a href="#날짜-형식-변환-문제" class="headerlink" title="날짜 형식 변환 문제"></a>날짜 형식 변환 문제</h2><ul>
+<li>날짜 형식 변환 문제를 통해 위에서 구현한 Attention seq2seq의 성능을 평가해 볼 것.<br><img src="../image/nlp-from-scratch/fig%208-22.png" alt="8-22"></li>
+</ul>
+<h3 id="학습"><a href="#학습" class="headerlink" title="학습"></a>학습</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># data load</span></span><br><span class="line">(x_train, t_train), (x_test, t_test) = sequence.load_data(<span class="string">&#x27;date.txt&#x27;</span>)</span><br><span class="line">char_to_id, id_to_char = sequence.get_vocab()</span><br><span class="line"></span><br><span class="line"><span class="comment"># reverse</span></span><br><span class="line">x_train, x_test = x_train[:, ::-<span class="number">1</span>], x_test[:, ::-<span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="comment"># hyperparameter 설정</span></span><br><span class="line">vocab_size = <span class="built_in">len</span>(char_to_id)</span><br><span class="line">wordvec_size = <span class="number">16</span></span><br><span class="line">hidden_size = <span class="number">256</span></span><br><span class="line">batch_size = <span class="number">128</span></span><br><span class="line">max_epoch = <span class="number">10</span></span><br><span class="line">max_grad = <span class="number">5.0</span></span><br><span class="line"></span><br><span class="line">model = AttentionSeq2seq(vocab_size, wordvec_size, hidden_size)</span><br><span class="line">optimizer = Adam()</span><br><span class="line">trainer = Trainer(model, optimizer)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">acc_list = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(max_epoch):</span><br><span class="line">    trainer.fit(x_train, t_train, max_epoch=<span class="number">1</span>, </span><br><span class="line">               batch_size=batch_size, max_grad=max_grad)</span><br><span class="line">    correct_num = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(x_test)):</span><br><span class="line">        question, correct = x_test[[i]], t_test[[i]]</span><br><span class="line">        verbose = i &lt; <span class="number">10</span></span><br><span class="line">        correct_num += eval_seq2seq(model, question, correct, </span><br><span class="line">                                   id_to_char, verbose, is_reverse=<span class="literal">True</span>)</span><br><span class="line">        </span><br><span class="line">    acc = <span class="built_in">float</span>(correct_num) / <span class="built_in">len</span>(x_test)</span><br><span class="line">    acc_list.append(acc)</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&#x27;val acc : <span class="subst">&#123;acc*<span class="number">100</span>&#125;</span>&#x27;</span>)</span><br><span class="line">    </span><br><span class="line"><span class="comment"># 파라미터 저장</span></span><br><span class="line">model.save_params()</span><br></pre></td></tr></table></figure>
+<h3 id="결과"><a href="#결과" class="headerlink" title="결과"></a>결과</h3><ul>
+<li><p>첫 epoch에서 거의 다 틀리는 모습(accuracy 0%)</p>
+<p>  | epoch 1 |  itr 1/351 | time 0.8640406131744385[s] | loss 4.07801399230957<br>  Q 10/15/94<br>  T 1994-10-15</p>
+<h2 id="X-1978-08-11"><a href="#X-1978-08-11" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q thursday, november 13, 2008<br>  T 2008-11-13</p>
+<h2 id="X-1978-08-11-1"><a href="#X-1978-08-11-1" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q Mar 25, 2003<br>  T 2003-03-25</p>
+<h2 id="X-1978-08-11-2"><a href="#X-1978-08-11-2" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q Tuesday, November 22, 2016<br>  T 2016-11-22</p>
+<h2 id="X-1978-08-11-3"><a href="#X-1978-08-11-3" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q Saturday, July 18, 1970<br>  T 1970-07-18</p>
+<h2 id="X-1978-08-11-4"><a href="#X-1978-08-11-4" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q october 6, 1992<br>  T 1992-10-06</p>
+<h2 id="X-1978-08-11-5"><a href="#X-1978-08-11-5" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q 8/23/08<br>  T 2008-08-23</p>
+<h2 id="X-1978-08-11-6"><a href="#X-1978-08-11-6" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q 8/30/07<br>  T 2007-08-30</p>
+<h2 id="X-1978-08-11-7"><a href="#X-1978-08-11-7" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q 10/28/13<br>  T 2013-10-28</p>
+<h2 id="X-1978-08-11-8"><a href="#X-1978-08-11-8" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  Q sunday, november 6, 2016<br>  T 2016-11-06</p>
+<h2 id="X-1978-08-11-9"><a href="#X-1978-08-11-9" class="headerlink" title="  X 1978-08-11"></a>  X 1978-08-11</h2><p>  val acc : 0.0</p>
+</li>
+<li><p>두번째 epoch에서 절반 정도 맞추기 시작(accuracy 51%)</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">| epoch 2 |  itr 1/351 | time 0.7569756507873535[s] | loss 1.0001761436462402</span><br><span class="line">Q 10/15/94                     </span><br><span class="line">T 1994-10-15</span><br><span class="line">O 1994-10-15</span><br><span class="line">---</span><br><span class="line">Q thursday, november 13, 2008  </span><br><span class="line">T 2008-11-13</span><br><span class="line">X 2006-11-13</span><br><span class="line">---</span><br><span class="line">Q Mar 25, 2003                 </span><br><span class="line">T 2003-03-25</span><br><span class="line">O 2003-03-25</span><br><span class="line">---</span><br><span class="line">Q Tuesday, November 22, 2016   </span><br><span class="line">T 2016-11-22</span><br><span class="line">O 2016-11-22</span><br><span class="line">---</span><br><span class="line">Q Saturday, July 18, 1970      </span><br><span class="line">T 1970-07-18</span><br><span class="line">O 1970-07-18</span><br><span class="line">---</span><br><span class="line">Q october 6, 1992              </span><br><span class="line">T 1992-10-06</span><br><span class="line">O 1992-10-06</span><br><span class="line">---</span><br><span class="line">Q 8/23/08                      </span><br><span class="line">T 2008-08-23</span><br><span class="line">O 2008-08-23</span><br><span class="line">---</span><br><span class="line">Q 8/30/07                      </span><br><span class="line">T 2007-08-30</span><br><span class="line">X 2007-08-09</span><br><span class="line">---</span><br><span class="line">Q 10/28/13                     </span><br><span class="line">T 2013-10-28</span><br><span class="line">X 1983-10-28</span><br><span class="line">---</span><br><span class="line">Q sunday, november 6, 2016     </span><br><span class="line">T 2016-11-06</span><br><span class="line">X 2016-11-08</span><br><span class="line">---</span><br><span class="line">val acc : 51.459999999999994</span><br></pre></td></tr></table></figure>
+<ul>
+<li>세번째 epoch부터는 대부분 맞추는 모습(accuracy 99.9%)</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">| epoch 3 |  itr 1/351 | time 0.6751952171325684[s] | loss 0.3480678558349609</span><br><span class="line">Q 10/15/94                     </span><br><span class="line">T 1994-10-15</span><br><span class="line">O 1994-10-15</span><br><span class="line">---</span><br><span class="line">Q thursday, november 13, 2008  </span><br><span class="line">T 2008-11-13</span><br><span class="line">O 2008-11-13</span><br><span class="line">---</span><br><span class="line">Q Mar 25, 2003                 </span><br><span class="line">T 2003-03-25</span><br><span class="line">O 2003-03-25</span><br><span class="line">---</span><br><span class="line">Q Tuesday, November 22, 2016   </span><br><span class="line">T 2016-11-22</span><br><span class="line">O 2016-11-22</span><br><span class="line">---</span><br><span class="line">Q Saturday, July 18, 1970      </span><br><span class="line">T 1970-07-18</span><br><span class="line">O 1970-07-18</span><br><span class="line">---</span><br><span class="line">Q october 6, 1992              </span><br><span class="line">T 1992-10-06</span><br><span class="line">O 1992-10-06</span><br><span class="line">---</span><br><span class="line">Q 8/23/08                      </span><br><span class="line">T 2008-08-23</span><br><span class="line">O 2008-08-23</span><br><span class="line">---</span><br><span class="line">Q 8/30/07                      </span><br><span class="line">T 2007-08-30</span><br><span class="line">O 2007-08-30</span><br><span class="line">---</span><br><span class="line">Q 10/28/13                     </span><br><span class="line">T 2013-10-28</span><br><span class="line">O 2013-10-28</span><br><span class="line">---</span><br><span class="line">Q sunday, november 6, 2016     </span><br><span class="line">T 2016-11-06</span><br><span class="line">O 2016-11-06</span><br><span class="line">---</span><br><span class="line">val acc : 99.9</span><br><span class="line"></span><br><span class="line">| epoch 4 |  itr 1/351 | time 0.6612319946289062[s] | loss 0.0072284087538719176</span><br><span class="line">val acc : 99.9</span><br><span class="line">| epoch 5 |  itr 1/351 | time 0.7998595237731934[s] | loss 0.002182954549789429</span><br><span class="line">val acc : 99.92</span><br><span class="line">| epoch 6 |  itr 1/351 | time 0.6403138637542725[s] | loss 0.0011220933869481088</span><br><span class="line">val acc : 99.92</span><br><span class="line">| epoch 7 |  itr 1/351 | time 0.6831746101379395[s] | loss 0.0007817970588803291</span><br><span class="line">val acc : 99.92</span><br><span class="line">| epoch 8 |  itr 1/351 | time 0.7886159420013428[s] | loss 0.0004389991983771324</span><br><span class="line">val acc : 99.96000000000001</span><br><span class="line">| epoch 9 |  itr 1/351 | time 0.6941773891448975[s] | loss 0.0005494490731507539</span><br><span class="line">val acc : 99.96000000000001</span><br><span class="line">| epoch 10 |  itr 1/351 | time 1.4657552242279053[s] | loss 0.0002428537467494607</span><br><span class="line">val acc : 100.0</span><br></pre></td></tr></table></figure>
+<ul>
+<li>accuracy 시각화</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">plt.plot(acc_list, <span class="string">&#x27;-o&#x27;</span>, label=<span class="string">&#x27;attention&#x27;</span>)</span><br><span class="line">plt.legend()</span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p><img src="../image/nlp-from-scratch/out%208-1.png" alt="out8-1"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/nlp/" rel="tag"># nlp</a>
+              <a href="/tags/attention/" rel="tag"># attention</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/10/28/nlp/from-scratch/ch07_seq2seq/" rel="prev" title="Ch 07. seq2seq">
+      <i class="fa fa-chevron-left"></i> Ch 07. seq2seq
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Attention"><span class="nav-number">1.</span> <span class="nav-text">Attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#seq2seq%EC%9D%98-%EB%AC%B8%EC%A0%9C%EC%A0%90"><span class="nav-number">1.0.1.</span> <span class="nav-text">seq2seq의 문제점</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Endoder-%EA%B0%9C%EC%84%A0"><span class="nav-number">1.0.2.</span> <span class="nav-text">Endoder 개선</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Decoder-%EA%B0%9C%EC%84%A0"><span class="nav-number">1.0.3.</span> <span class="nav-text">Decoder 개선</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Weighted-Sum"><span class="nav-number">1.0.3.1.</span> <span class="nav-text">Weighted Sum</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#a%EB%A5%BC-%EA%B5%AC%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95"><span class="nav-number">1.0.3.2.</span> <span class="nav-text">a를 구하는 방법</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%EA%B2%B0%ED%95%A9"><span class="nav-number">1.0.3.3.</span> <span class="nav-text">결합</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Attention%EC%9D%84-%ED%8F%AC%ED%95%A8%ED%95%9C-seq2seq-%EA%B5%AC%ED%98%84"><span class="nav-number">1.0.4.</span> <span class="nav-text">Attention을 포함한 seq2seq 구현</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%EB%82%A0%EC%A7%9C-%ED%98%95%EC%8B%9D-%EB%B3%80%ED%99%98-%EB%AC%B8%EC%A0%9C"><span class="nav-number">1.1.</span> <span class="nav-text">날짜 형식 변환 문제</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%ED%95%99%EC%8A%B5"><span class="nav-number">1.1.1.</span> <span class="nav-text">학습</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EA%B2%B0%EA%B3%BC"><span class="nav-number">1.1.2.</span> <span class="nav-text">결과</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11"><span class="nav-number">1.2.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-1"><span class="nav-number">1.3.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-2"><span class="nav-number">1.4.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-3"><span class="nav-number">1.5.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-4"><span class="nav-number">1.6.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-5"><span class="nav-number">1.7.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-6"><span class="nav-number">1.8.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-7"><span class="nav-number">1.9.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-8"><span class="nav-number">1.10.</span> <span class="nav-text">  X 1978-08-11</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#X-1978-08-11-9"><span class="nav-number">1.11.</span> <span class="nav-text">  X 1978-08-11</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Dongyoung Kim</p>
+  <div class="site-description" itemprop="description">Mathematics, Python, ML, Data</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dongyoung0" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dongyoung0" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:wmkimdy@gmail.com" title="E-Mail → mailto:wmkimdy@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Dongyoung Kim</span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
